@@ -1,5 +1,5 @@
-Cloud Eagle is DevOps portal for OpenStack
-------------------------------------------
+Cloud Eagle is support portal for OpenStack
+-------------------------------------------
 
 Cloud Eagle portal covers next topics
 
