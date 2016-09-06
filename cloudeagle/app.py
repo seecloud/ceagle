@@ -16,7 +16,7 @@
 #    under the License.
 
 
-from flask import Flask
+from flask import Flask  # noqa
 
 
 app = Flask(__name__)

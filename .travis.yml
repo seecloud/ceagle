@@ -1,0 +1,22 @@
+language: python
+
+install:
+  - pip install tox
+
+env:
+   - TOXENV=pep8
+   - TOXENV=py27
+   - TOXENV=py33
+   - TOXENV=py34
+
+script:
+  - tox
+
+matrix:
+  include:
+    - python: "2.7"
+      install:
+        - pip install tox
+        - pip install coveralls
+      env: TOXENV=cover
+      after_success: coveralls
