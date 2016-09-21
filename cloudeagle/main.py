@@ -1,3 +1,5 @@
+#
+#
 # Copyright 2016: Mirantis Inc.
 # All Rights Reserved.
 #
@@ -14,10 +16,30 @@
 #    under the License.
 
 
-from tests.unit import test
+import flask
 
 
-class MainTestCase(test.TestCase):
+app = flask.Flask(__name__)
 
-    def test_noop(self):
-        self.assertEqual(True, 2 == 2)
+app.config.from_object(__name__)
+app.config.update({"SECRET_KEY": "change_this_key_in_prod"})
+
+app.config.from_envvar("CLOUDEAGLE_SETTINGS", silent=True)
+
+
+@app.route("/", methods=["GET"])
+def index():
+    return flask.render_template("index.html", title="Index")
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return flask.render_template("errors/not_found.html",
+                                 title="Not Found"), 404
+
+
+def main():
+    app.run(port=8080)
+
+if __name__ == "__main__":
+    main()

@@ -1,5 +1,3 @@
-#
-#
 # Copyright 2016: Mirantis Inc.
 # All Rights Reserved.
 #
@@ -16,14 +14,17 @@
 #    under the License.
 
 
-from flask import Flask  # noqa
+from tests.unit import test
 
 
-app = Flask(__name__)
+class AppTestCase(test.TestCase):
 
+    def test_index(self):
+        rv = self.app.get("/")
+        self.assertEqual(200, rv.status_code)
+        self.assertIn("Hello there!", str(rv.data))
 
-def main():
-    app.run(port=8080)
-
-if __name__ == "__main__":
-    main()
+    def test_not_found(self):
+        rv = self.app.get("/unexisting/path/to/somewhere/else")
+        self.assertEqual(404, rv.status_code)
+        self.assertIn("Not Found", str(rv.data))
