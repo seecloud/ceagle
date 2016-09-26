@@ -9,11 +9,12 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" href="{{ url_for('static', filename='pics/favicon.ico') }}" type="image/x-icon" />
-        <title> Cloud Eagle Portal - {{ title }} </title>
+        <title> Cloud Eagle - {{ title }} </title>
 
         <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
 
+        <script src="{{ url_for('static', filename='js/d3.js') }}" > </script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
@@ -22,7 +23,7 @@
         {% block head %} {% endblock %}
     </head>
 
-    <body {% block bodyattr %} {% endblock %}> >
+    <body {% block bodyattr %} {% endblock %}>
 
         <nav class="navbar navbar-inverse header">
             <div class="navbar-header">
