@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 
-
 {% block htmlattr %} ng-app="health_app" {% endblock %}
 
 {% block bodyattr %} ng-controller="health_controller" {% endblock %}
@@ -8,14 +7,98 @@
 
 {% block head %}
     <script src="{{ url_for('static', filename='js/health.js') }}" > </script>
+
+    <style>
+        svg.line_chart text {
+            font: 8px sans-serif;
+            color: #777;
+        }
+
+        svg.line_chart .axis path,
+        svg.line_chart .axis line {
+          fill: none;
+          stroke: #777;
+          shape-rendering: crispEdges;
+        }
+
+        svg.line_chart .line {
+          fill: none;
+          stroke: #ec8e1d;
+          stroke-width: 1.5px;
+        }
+
+        .projects_health div div {
+            margin: 5px;
+            border-radius: 5px;
+            height: 100px;
+
+        }
+
+        .projects_health .fci_panel div {
+            color: white;
+
+            vertical-align: middle;
+            display: table-cell;
+            float: none;
+            width: inherit;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .projects_health .chart {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        .status-red {
+            background-color: #fd5308;
+        }
+
+        .status-green {
+            background-color: #66b132;
+        }
+
+        .status-orange {
+            background-color: #fb9902;
+        }
+
+
+    </style>
 {% endblock %}
 
 
 
 {% block body %}
-
     <h1> API Health </h1>
 
+    <p> API Health is based on HTTP requests response metrics: codes, duration and size. </p>
+
+    <p> FCI score is ratio of successful codes (2xx, 3xx, 4xx) to all http codes. </p>
+
+    <hr />
+    {% raw %}
+
+    <div class="projects_health" ng-repeat="pr_name in data.project_names">
+
+        <div class="row">
+                <div class="col-xs-2 fci_panel">
+                    <div class="status-{{status(pr_name)}}"> {{ pr_name }} <br /> {{ data.projects[pr_name].fci * 100 + "%" }} </div>
+                </div>
+                <div class="col-xs-3 chart">
+                    <d3-line-chart ng-transclude project="{{pr_name}}" src="fci_score_data" title="FCI Score"></d3-line-chart>
+                </div>
+
+                <div class="col-xs-3 chart">
+                    <d3-line-chart ng-transclude project="{{pr_name}}" src="response_time_data" title="Response Time (ms)"></d3-line-chart>
+                </div>
+                <div class="col-xs-3 chart">
+                    <d3-line-chart ng-transclude project="{{pr_name}}" src="response_size_data" title="Response Size (byte)"></d3-line-chart>
+                </div>
+        </div>
+
+    </div>
+
+
+    {% endraw %}
+
 {% endblock %}
-
-

@@ -15,9 +15,21 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import random
 
 import flask
 
+
+def gen_values(mode):
+
+    if mode == 1:
+        gen = lambda: random.uniform(0.9, 1)
+    elif mode == 2:
+        gen = lambda: random.randint(20, 2000)
+    elif mode == 3:
+        gen = lambda: random.randint(100, 40000)
+
+    return [["24-Sep-16T%s" % i, gen()] for i in range(24)]
 
 app = flask.Flask(__name__)
 
@@ -35,7 +47,51 @@ def index():
 @app.route("/health", methods=["GET"])
 def health():
     return flask.render_template("health.html",
-                                 menu="api_health", title="Index")
+                                 menu="api_health", title="API Health")
+
+
+@app.route("/health/data", methods=["GET"])
+@app.route("/health/data/<for_period>", methods=["GET"])
+def health_data(for_period="last_day"):
+
+    return flask.jsonify(**{
+        "project_names": ["keystone", "nova", "glance", "cinder", "neutron"],
+        "projects": {
+
+            "keystone": {
+                "fci": 0.9,
+                "fci_score_data": gen_values(1),
+                "response_time_data": gen_values(2),
+                "response_size_data": gen_values(3)
+            },
+            "nova": {
+                "fci": 1.0,
+                "fci_score_data": gen_values(1),
+                "response_time_data": gen_values(2),
+                "response_size_data": gen_values(3)
+            },
+            "glance": {
+                "fci": 0.96,
+                "fci_score_data": gen_values(1),
+                "response_time_data": gen_values(2),
+                "response_size_data": gen_values(3)
+            },
+            "cinder": {
+                "fci": 0.995,
+                "fci_score_data": gen_values(1),
+                "response_time_data": gen_values(2),
+                "response_size_data": gen_values(3)
+
+            },
+            "neutron": {
+                "fci": 0.999,
+                "fci_score_data": gen_values(1),
+                "response_time_data": gen_values(2),
+                "response_size_data": gen_values(3)
+
+            }
+        }
+    })
 
 
 @app.route("/about", methods=["GET"])
@@ -52,7 +108,7 @@ def not_found(error):
 
 
 def main():
-    app.run(port=8080)
+    app.run(port=8080, debug=True)
 
 
 if __name__ == "__main__":
