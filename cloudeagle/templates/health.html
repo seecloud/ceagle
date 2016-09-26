@@ -1,5 +1,17 @@
 {% extends "layout.html" %}
 
+
+{% block htmlattr %} ng-app="health_app" {% endblock %}
+
+{% block bodyattr %} ng-controller="health_controller" {% endblock %}
+
+
+{% block head %}
+    <script src="{{ url_for('static', filename='js/health.js') }}" > </script>
+{% endblock %}
+
+
+
 {% block body %}
 
     <h1> API Health </h1>

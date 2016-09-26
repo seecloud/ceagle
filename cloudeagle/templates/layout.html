@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html ng-app="dashboard">
+<html {% block htmlattr %} {% endblock %}>
 
     <head>
         <meta charset="utf-8">
@@ -19,12 +19,10 @@
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
         <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.1.3.js"></script>
 
-        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-
-        {% block head %}{% endblock %}
+        {% block head %} {% endblock %}
     </head>
 
-    <body ng-controller="MainContorller">
+    <body {% block bodyattr %} {% endblock %}> >
 
         <nav class="navbar navbar-inverse header">
             <div class="navbar-header">
