@@ -1,10 +1,55 @@
 <!doctype html>
 
-<head>
-    <title> Cloud Eagle Portal - {{ title }} </title>
-    {% block head %}{% endblock %}
-</head>
+<html ng-app="dashboard">
 
-<body>
-    {% block body %}{% endblock %}
-</body>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="{{ url_for('static', filename='pics/favicon.ico') }}" type="image/x-icon" />
+        <title> Cloud Eagle Portal - {{ title }} </title>
+
+        <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+        <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.1.3.js"></script>
+
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+        {% block head %}{% endblock %}
+    </head>
+
+    <body ng-controller="MainContorller">
+
+        <nav class="navbar navbar-inverse header">
+            <div class="navbar-header">
+                <a href="#">
+                    <img src="{{ url_for('static', filename='pics/logo.png') }}" height="40px" />
+                    <span>Cloud Eagle</span>
+                </a>
+
+            </div>
+
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2 sidebar menu">
+                    <ul class="nav nav-sidebar">
+                      <li {% if menu == "index" %} class="active"{% endif %}><a href="/">Overview</a></li>
+                      <li {% if menu == "api_health" %} class="active"{% endif %}><a href="/health">API Health</a></li>
+                      <li {% if menu == "about" %} class="active"{% endif %}><a href="/about">About</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-8 col-md-offset-1 main">
+                    {% block body %} {% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

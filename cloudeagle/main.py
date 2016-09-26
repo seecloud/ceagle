@@ -29,17 +29,31 @@ app.config.from_envvar("CLOUDEAGLE_SETTINGS", silent=True)
 
 @app.route("/", methods=["GET"])
 def index():
-    return flask.render_template("index.html", title="Index")
+    return flask.render_template("index.html", menu="index", title="Index")
+
+
+@app.route("/health", methods=["GET"])
+def health():
+    return flask.render_template("health.html",
+                                 menu="api_health", title="Index")
+
+
+@app.route("/about", methods=["GET"])
+def about():
+    return flask.render_template("about.html",
+                                 menu="about", title="About")
 
 
 @app.errorhandler(404)
 def not_found(error):
     return flask.render_template("errors/not_found.html",
+                                 menu="error",
                                  title="Not Found"), 404
 
 
 def main():
     app.run(port=8080)
+
 
 if __name__ == "__main__":
     main()
