@@ -1,7 +1,7 @@
 Cloud Eagle is support portal for OpenStack
--------------------------------------------
+===========================================
 
-Cloud Eagle portal covers next topics
+Cloud Eagle is DevOps portal that simplifies operating cloud, it covers next topics:
 
 * Hardware & virtual inventory
 * Capacity management
@@ -15,3 +15,30 @@ Cloud Eagle portal covers next topics
 * API request tracing
 
 
+Running As A Docker Container
+-----------------------------
+
+Build Docker Container
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: sh
+    docker build -t cloud-eagle:latest .
+
+
+Configure & Run Container
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+First of all create config file, for example in:
+
+.. code-block:: sh
+
+    mkdir ~/cloud-eagle-conf
+    vi ~/cloud-eagle-conf/conf.cfg
+    # Provide Flask conf options:
+    # http://flask.pocoo.org/docs/0.11/config/#builtin-configuration-values
+
+
+Run you container with volume that contains config
+
+.. code-block:: sh
+    docker run -d -p -v ~/cloud-eagle-conf:/etc/cloud-eagle 5000:5000 cloud-eagle

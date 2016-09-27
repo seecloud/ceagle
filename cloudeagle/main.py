@@ -35,8 +35,8 @@ app = flask.Flask(__name__)
 
 app.config.from_object(__name__)
 app.config.update({"SECRET_KEY": "change_this_key_in_prod"})
-
 app.config.from_envvar("CLOUDEAGLE_SETTINGS", silent=True)
+app.config.from_pyfile('/etc/cloud-eagle/config.cfg', silent=True)
 
 
 @app.route("/", methods=["GET"])
@@ -108,7 +108,8 @@ def not_found(error):
 
 
 def main():
-    app.run(port=8080, debug=True)
+    app.run(host=app.config.get("HOST", "0.0.0.0"),
+            port=app.config.get("PORT", 5000))
 
 
 if __name__ == "__main__":
