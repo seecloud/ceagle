@@ -15,7 +15,7 @@ WORKDIR /app
 RUN python setup.py install
 RUN pip install -r requirements.txt
 
-WORKDIR /app/cloudeagle
+WORKDIR /app/ceagle
 EXPOSE 5000
 
 ENTRYPOINT ["python"]

@@ -22,7 +22,7 @@ Build Docker Container
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: sh
-    docker build -t cloud-eagle:latest .
+    docker build -t ceagle:latest .
 
 
 Configure & Run Container
@@ -32,8 +32,8 @@ First of all create config file, for example in:
 
 .. code-block:: sh
 
-    mkdir ~/cloud-eagle-conf
-    vi ~/cloud-eagle-conf/conf.cfg
+    mkdir ~/ceagle-conf
+    vi ~/ceagle-conf/conf.cfg
     # Provide Flask conf options:
     # http://flask.pocoo.org/docs/0.11/config/#builtin-configuration-values
 
@@ -41,4 +41,5 @@ First of all create config file, for example in:
 Run you container with volume that contains config
 
 .. code-block:: sh
-    docker run -d -p -v ~/cloud-eagle-conf:/etc/cloud-eagle 5000:5000 cloud-eagle
+
+    docker run -d --name ceagle -v ~/ceagle-conf:/etc/ceagle -p  5000:5000 ceagle

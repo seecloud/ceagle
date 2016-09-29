@@ -16,7 +16,7 @@
 import mock
 import testtools
 
-from cloudeagle import main
+from ceagle import main
 
 
 class TestCase(testtools.TestCase):

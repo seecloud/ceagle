@@ -16,15 +16,15 @@
 
 import flask
 
-from cloudeagle.mock_api import mock_api
+from ceagle.mock_api import mock_api
 
 
 app = flask.Flask(__name__)
 
 app.config.from_object(__name__)
 app.config.update({"SECRET_KEY": "change_this_key_in_prod"})
-app.config.from_envvar("CLOUDEAGLE_SETTINGS", silent=True)
-app.config.from_pyfile('/etc/cloud-eagle/config.cfg', silent=True)
+app.config.from_envvar("CEAGLE_SETTINGS", silent=True)
+app.config.from_pyfile('/etc/ceagle/config.cfg', silent=True)
 
 
 @app.route("/", methods=["GET"])
