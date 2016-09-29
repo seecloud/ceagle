@@ -1,6 +1,13 @@
 Cloud Eagle is support portal for OpenStack
 ===========================================
 
+
+.. image:: https://coveralls.io/repos/github/seecloud/ceagle/badge.svg?branch=master
+    :target: https://coveralls.io/github/seecloud/ceagle?branch=master
+
+.. image:: https://travis-ci.org/seecloud/ceagle.svg?branch=master
+    :target: https://travis-ci.org/seecloud/ceagle
+
 Cloud Eagle is DevOps portal that simplifies operating cloud, it covers next topics:
 
 * Hardware & virtual inventory
