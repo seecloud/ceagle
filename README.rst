@@ -22,6 +22,7 @@ Build Docker Container
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: sh
+
     docker build -t ceagle:latest .
 
 
