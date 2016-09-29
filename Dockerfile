@@ -19,4 +19,4 @@ WORKDIR /app/ceagle
 EXPOSE 5000
 
 ENTRYPOINT ["python"]
-CMD ["app.py"]
+CMD ["main.py"]
