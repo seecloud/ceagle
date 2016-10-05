@@ -13,6 +13,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import json
+import os
 
 import flask
 
@@ -24,7 +26,6 @@ app = flask.Flask(__name__)
 app.config.from_object(__name__)
 app.config.update({"SECRET_KEY": "change_this_key_in_prod"})
 app.config.from_envvar("CEAGLE_SETTINGS", silent=True)
-app.config.from_pyfile('/etc/ceagle/config.cfg', silent=True)
 
 
 @app.route("/", methods=["GET"])
@@ -49,7 +50,30 @@ for url_prefix, blueprint in cloud_status.get_blueprints():
     app.register_blueprint(blueprint, url_prefix=url_prefix)
 
 
+@app.context_processor
+def inject_config():
+    return dict(cloud_status_conf=app.config["cloud_status"],
+                global_conf=app.config["global"])
+
+
+def load_config(path="/etc/ceagle/config.json"):
+    try:
+        with open(path) as f:
+            config = json.load(f)
+    except IOError as e:
+        print("Config at '%s': %s" % (path, e))
+        config = {}
+
+    app.config.update(config.get("flask", {}))
+    app.config["cloud_status"] = config.get("cloud_status",
+                                            {"enabled": False})
+    app.config["global"] = config.get("global", {"portal_name": "Cloud Eagle"})
+
+
 def main():
+
+    load_config(path=os.environ.get("CEAGLE_CONF", "/etc/ceagle/config.json"))
+
     app.run(host=app.config.get("HOST", "0.0.0.0"),
             port=app.config.get("PORT", 5000))
 
