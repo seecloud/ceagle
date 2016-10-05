@@ -15,7 +15,7 @@
 
 import flask
 
-from ceagle.mock_api import mock_api
+from ceagle.api_fake_data import cloud_status_data
 
 
 overview = flask.Blueprint("overview", __name__,
@@ -61,7 +61,7 @@ def health_index():
 @health.route("/v1", defaults={"region": "all"})
 @health.route("/v1/<region>")
 def health_data_v1(region):
-    return mock_api.health_projects()
+    return cloud_status_data.health_projects()
 
 
 @availability.route("/")
