@@ -1,5 +1,20 @@
-angular.module('d3.line_chart', []);
+/* Angular directive for D3 line chart.
 
+  Sample of usage:
+
+  <d3-line-chart
+      title="Chart title"
+      scope_var="scope_data.line_chart_data">
+  </d3-line-chart>
+
+  * title     - Chart title
+  * scope - Variable in controller scope that contains chart data
+
+    Data format is very simple
+    [["Date in format '%d-%b-%yT%H'", float_value], [...], ...]
+*/
+
+angular.module('d3.line_chart', []);
 angular.module('d3.line_chart')
   .directive('d3LineChart', function() {
     return {
@@ -13,56 +28,17 @@ angular.module('d3.line_chart')
             .attr("width", "100%")
             .attr("height", "100%");
 
-        var _render_func = draw_line_chart(svg, iAttrs["title"]);
+        var _render_func = line_chart(svg, iAttrs["title"]);
 
-        scope.$watch("data.projects." + iAttrs["project"]+ "." + iAttrs["src"],
-
-
-
-                     function(newVals, oldVals) {
+        scope.$watch(iAttrs["scope"], function(newVals, oldVals) {
           return _render_func(newVals);
         }, true);
       }
     }
   });
 
-angular.module('health_app',
-               ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'd3.line_chart']);
 
-
-angular.module('health_app')
-  .controller('health_controller', function ($scope, $http) {
-    $scope.data = {
-      "project_names": [],
-      "projects": {}
-    }
-
-    var fetch_data = function(){
-      $http.get('/health/data').
-        success(function(data, status, headers, config) {
-          $scope.data = data;
-        }).
-        error(function(data, status, headers, config) {
-          console.log("Can't fetch data status: " + status)
-        });
-    }
-
-    fetch_data()
-    setInterval(fetch_data, 5000);
-
-    $scope.status = function(pr_name){
-      var fci = $scope.data.projects[pr_name].fci;
-      if (fci > 0.99){
-        return "green"
-      }
-      else if (fci > 0.95){
-        return "orange"
-      }
-      return "red"
-    }
-});
-
-var draw_line_chart = function(svg, title){
+var line_chart = function(svg, title){
     var margin = {top: 10, right: 20, bottom: 20, left: 30}
     var parse_date = d3.timeParse("%d-%b-%yT%H");
 

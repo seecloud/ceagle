@@ -31,17 +31,20 @@
                     <img src="{{ url_for('static', filename='pics/logo.png') }}" height="40px" />
                     <span>Cloud Eagle</span>
                 </a>
-
             </div>
-
         </nav>
 
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-2 sidebar menu">
                     <ul class="nav nav-sidebar">
-                      <li {% if menu == "index" %} class="active"{% endif %}><a href="/">Overview</a></li>
-                      <li {% if menu == "api_health" %} class="active"{% endif %}><a href="/health">API Health</a></li>
+                      <li {% if menu == "index" %} class="active"{% endif %}>
+                        <a href="/">Home</a>
+                     </li>
+                      <li {% if menu == "cloud_status" %} class="active"{% endif %}>
+                        <a href="/cloud_status">Cloud Status</a>
+                        {% block cloud_stats_menu %} {% endblock %}
+                      </li>
                       <li {% if menu == "about" %} class="active"{% endif %}><a href="/about">About</a></li>
                     </ul>
                 </div>

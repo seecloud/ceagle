@@ -48,7 +48,40 @@
   background-color: gray!important;
 }
 
+.nav-sidebar ul.nested_menu {
+  list-style-type: none;
+}
 
+.nav-sidebar ul.nested_menu li:hover {
+  background-color: gray;
+}
+
+
+.nav-sidebar ul.nested_menu li{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+
+.nav-sidebar ul.nested_menu li.active {
+  background-color: #666;
+}
+
+
+.nav-sidebar ul.nested_menu a {
+  display: block;
+  padding: 5px 5px 5px 15px;
+  text-decoration: none;
+  background-color: transparent!important;
+}
+
+
+.nav-sidebar ul.nested_menu .active > a {
+  font-weight: bold;
+  color: white;
+
+}
 
 
 .navbar-header a span {

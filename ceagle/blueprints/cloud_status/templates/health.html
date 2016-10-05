@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "cs_layout.html" %}
 
 {% block htmlattr %} ng-app="health_app" {% endblock %}
 
@@ -6,7 +6,48 @@
 
 
 {% block head %}
-    <script src="{{ url_for('static', filename='js/health.js') }}" > </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/angular-d3.js') }}"></script>
+
+    <script>
+        angular.module('health_app',
+                       ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'd3.line_chart']);
+
+        angular.module('health_app')
+          .controller('health_controller', function ($scope, $http) {
+            $scope.data = {
+              "project_names": [],
+              "projects": {}
+            }
+
+            $scope.has_data = false;
+
+            var fetch_data = function(){
+              $http.get('/cloud_status/health/v1').
+                success(function(data, status, headers, config) {
+                  $scope.data = data;
+                  $scope.has_data = true;
+                }).
+                error(function(data, status, headers, config) {
+                  console.log("Can't fetch data status: " + status)
+                });
+            }
+
+            fetch_data();
+            setInterval(fetch_data, 5000);
+
+            $scope.status = function(pr_name){
+              var fci = $scope.data.projects[pr_name].fci;
+              if (fci > 0.99){
+                return "green";
+              }
+              else if (fci > 0.95){
+                return "orange";
+              }
+              return "red";
+            }
+        });
+
+    </script>
 
     <style>
         svg.line_chart text {
@@ -36,7 +77,6 @@
 
         .projects_health .fci_panel div {
             color: white;
-
             vertical-align: middle;
             display: table-cell;
             float: none;
@@ -62,19 +102,13 @@
             background-color: #fb9902;
         }
 
-
     </style>
 {% endblock %}
 
-
-
 {% block body %}
     <h1> API Health </h1>
-
     <p> API Health is based on HTTP requests response metrics: codes, duration and size. </p>
-
     <p> FCI score is ratio of successful codes (2xx, 3xx, 4xx) to all http codes. </p>
-
     <hr />
     {% raw %}
 
@@ -85,19 +119,27 @@
                     <div class="status-{{status(pr_name)}}"> {{ pr_name }} <br /> {{ data.projects[pr_name].fci * 100 + "%" }} </div>
                 </div>
                 <div class="col-xs-3 chart">
-                    <d3-line-chart ng-transclude project="{{pr_name}}" src="fci_score_data" title="FCI Score"></d3-line-chart>
+                    <d3-line-chart ng-transclude scope="data.projects.{{pr_name}}.fci_score_data" title="FCI Score">
+                    </d3-line-chart>
                 </div>
 
                 <div class="col-xs-3 chart">
-                    <d3-line-chart ng-transclude project="{{pr_name}}" src="response_time_data" title="Response Time (ms)"></d3-line-chart>
+                    <d3-line-chart ng-transclude scope="data.projects.{{pr_name}}.response_time_data" title="Response Time (ms)">
+                    </d3-line-chart>
                 </div>
                 <div class="col-xs-3 chart">
-                    <d3-line-chart ng-transclude project="{{pr_name}}" src="response_size_data" title="Response Size (byte)"></d3-line-chart>
+                    <d3-line-chart ng-transclude scope="data.projects.{{pr_name}}.response_size_data" title="Response Size (byte)">
+                    </d3-line-chart>
                 </div>
         </div>
-
     </div>
 
+    <div ng-hide="has_data">
+        <center>
+            <p>Sorry</p>
+            <p> API Health data is not available. </p>
+        </center>
+    </div>
 
     {% endraw %}
 
