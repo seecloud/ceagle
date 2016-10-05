@@ -24,10 +24,20 @@ class AppTestCase(test.TestCase):
         self.assertEqual(200, rv.status_code)
         self.assertIn("Adorable DevOps Portal!", str(rv.data))
 
-    def test_api_health(self):
-        rv = self.app.get("/health")
+    def test_cloud_status(self):
+        rv = self.app.get("/cloud_status/")
+        self.assertEqual(200, rv.status_code)
+        self.assertIn("Cloud Status Overview", str(rv.data))
+
+    def test_cloud_status_health(self):
+        rv = self.app.get("/cloud_status/health/")
         self.assertEqual(200, rv.status_code)
         self.assertIn("API Health", str(rv.data))
+
+    def test_cloud_status_availability(self):
+        rv = self.app.get("/cloud_status/availability/")
+        self.assertEqual(200, rv.status_code)
+        self.assertIn("API Availability", str(rv.data))
 
     def test_about(self):
         rv = self.app.get("/about")

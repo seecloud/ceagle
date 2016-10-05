@@ -19,7 +19,6 @@ import flask
 
 
 def _gen_values(mode):
-
     if mode == 1:
         return [["24-Sep-16T%s" % i, random.uniform(0.9, 1)]
                 for i in range(24)]

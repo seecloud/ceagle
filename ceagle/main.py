@@ -16,7 +16,7 @@
 
 import flask
 
-from ceagle.mock_api import mock_api
+from ceagle.blueprints.cloud_status import cloud_status
 
 
 app = flask.Flask(__name__)
@@ -32,18 +32,6 @@ def index():
     return flask.render_template("index.html", menu="index", title="Index")
 
 
-@app.route("/health", methods=["GET"])
-def health():
-    return flask.render_template("health.html",
-                                 menu="api_health", title="API Health")
-
-
-@app.route("/health/data", methods=["GET"])
-@app.route("/health/data/<for_period>", methods=["GET"])
-def health_projects(for_period="last_day"):
-    return mock_api.health_projects()
-
-
 @app.route("/about", methods=["GET"])
 def about():
     return flask.render_template("about.html",
@@ -55,6 +43,10 @@ def not_found(error):
     return flask.render_template("errors/not_found.html",
                                  menu="error",
                                  title="Not Found"), 404
+
+
+for url_prefix, blueprint in cloud_status.get_blueprints():
+    app.register_blueprint(blueprint, url_prefix=url_prefix)
 
 
 def main():

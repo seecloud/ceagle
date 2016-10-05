@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block cloud_stats_menu %}
+    <ul class="nested_menu">
+        <li{% if submenu == "overview" %} class="active"{% endif %}>
+            <a href="/cloud_status/"> Overview </a>
+        </li>
+        <li {% if submenu == "availability" %} class="active"{% endif %}>
+            <a href="/cloud_status/availability"> API Availability</a>
+        </li>
+        <li {% if submenu == "health" %} class="active"{% endif %}>
+            <a href="/cloud_status/health"> API Health </a>
+        </li>
+    </ul>
+{% endblock %}
+
