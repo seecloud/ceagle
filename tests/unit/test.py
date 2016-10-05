@@ -25,5 +25,6 @@ class TestCase(testtools.TestCase):
         super(TestCase, self).setUp()
         self.addCleanup(mock.patch.stopall)
 
+        main.load_config()
         main.app.config["TESTING"] = True
         self.app = main.app.test_client()

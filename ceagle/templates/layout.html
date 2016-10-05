@@ -9,7 +9,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" href="{{ url_for('static', filename='pics/favicon.ico') }}" type="image/x-icon" />
-        <title> Cloud Eagle - {{ title }} </title>
+        <title> {{ global_conf["portal_name"] }} - {{ title }} </title>
 
         <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
@@ -29,7 +29,7 @@
             <div class="navbar-header">
                 <a href="#">
                     <img src="{{ url_for('static', filename='pics/logo.png') }}" height="40px" />
-                    <span>Cloud Eagle</span>
+                    <span>{{ global_conf["portal_name"] }}</span>
                 </a>
             </div>
         </nav>
