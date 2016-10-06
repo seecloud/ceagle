@@ -69,3 +69,25 @@ def health_projects():
             }
         }
     })
+
+
+def overview_data():
+    return flask.jsonify(**{
+        "region_names": ["west-1.hooli.net",
+                         "west-2.hooli.net",
+                         "south-1.hooli.net"],
+        "regions": {
+            "west-1.hooli.net": {
+                "fci": 1.0,
+                "availability": 0.99999
+            },
+            "west-2.hooli.net": {
+                "fci": 1.0,
+                "availability": 0.99916
+            },
+            "south-1.hooli.net": {
+                "fci": 0.85,
+                "availability": 0.95
+            }
+        }
+    })

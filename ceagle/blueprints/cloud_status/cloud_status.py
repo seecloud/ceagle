@@ -30,7 +30,7 @@ availability = flask.Blueprint("availability", __name__,
 
 def get_blueprints():
     return [
-        ["/cloud_status/", overview],
+        ["/cloud_status", overview],
         ["/cloud_status/health", health],
         ["/cloud_status/availability", availability]
     ]
@@ -44,10 +44,10 @@ def overview_index():
                                  title="Cloud Status Overview")
 
 
-@overview.route("/v1", defaults={"region": "all"})
-@overview.route("/v1/<region>")
-def overview_data_v1(region):
-    return flask.jsonify(**{})
+@overview.route("/v1")
+@overview.route("/v1/")
+def overview_data_v1():
+    return cloud_status_data.overview_data()
 
 
 @health.route("/")

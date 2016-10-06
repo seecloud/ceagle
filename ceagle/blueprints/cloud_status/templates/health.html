@@ -37,12 +37,8 @@
 
             $scope.status = function(pr_name){
               var fci = $scope.data.projects[pr_name].fci;
-              if (fci > 0.99){
-                return "green";
-              }
-              else if (fci > 0.95){
-                return "orange";
-              }
+              if (fci > 0.99) return "green";
+              if (fci > 0.95) return "orange";
               return "red";
             }
         });
@@ -57,7 +53,7 @@
     <hr />
     {% raw %}
 
-    <div class="projects_health" ng-repeat="pr_name in data.project_names">
+    <div ng-repeat="pr_name in data.project_names">
 
         <div class="row report_line">
                 <div class="col-xs-2 pile">
