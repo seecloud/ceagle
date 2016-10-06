@@ -39,7 +39,7 @@ angular.module('d3.line_chart')
 
 
 var line_chart = function(svg, title){
-    var margin = {top: 10, right: 20, bottom: 20, left: 30}
+    var margin = {top: 15, right: 20, bottom: 20, left: 35}
     var parse_date = d3.timeParse("%d-%b-%yT%H");
 
     svg.attr("class", "line_chart")
@@ -48,8 +48,8 @@ var line_chart = function(svg, title){
     g.append("text")
       .text(title)
       .attr("class", "title")
-      .attr("x", 15)
-      .attr("y", -2);
+      .attr("x", 5)
+      .attr("y", -5);
 
     var x_axis = g.append("g").attr("class", "x axis");
     var y_axis = g.append("g").attr("class", "y axis");

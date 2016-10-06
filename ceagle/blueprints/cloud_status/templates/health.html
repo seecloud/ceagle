@@ -48,61 +48,6 @@
         });
 
     </script>
-
-    <style>
-        svg.line_chart text {
-            font: 8px sans-serif;
-            color: #777;
-        }
-
-        svg.line_chart .axis path,
-        svg.line_chart .axis line {
-          fill: none;
-          stroke: #777;
-          shape-rendering: crispEdges;
-        }
-
-        svg.line_chart .line {
-          fill: none;
-          stroke: #ec8e1d;
-          stroke-width: 1.5px;
-        }
-
-        .projects_health div div {
-            margin: 5px;
-            border-radius: 5px;
-            height: 100px;
-
-        }
-
-        .projects_health .fci_panel div {
-            color: white;
-            vertical-align: middle;
-            display: table-cell;
-            float: none;
-            width: inherit;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .projects_health .chart {
-            padding: 0px;
-            margin: 0px;
-        }
-
-        .status-red {
-            background-color: #fd5308;
-        }
-
-        .status-green {
-            background-color: #66b132;
-        }
-
-        .status-orange {
-            background-color: #fb9902;
-        }
-
-    </style>
 {% endblock %}
 
 {% block body %}
@@ -114,9 +59,9 @@
 
     <div class="projects_health" ng-repeat="pr_name in data.project_names">
 
-        <div class="row">
-                <div class="col-xs-2 fci_panel">
-                    <div class="status-{{status(pr_name)}}"> {{ pr_name }} <br /> {{ data.projects[pr_name].fci * 100 + "%" }} </div>
+        <div class="row report_line">
+                <div class="col-xs-2 pile">
+                    <div class="status-{{status(pr_name)}}"> {{ pr_name }} FCI <br /> {{ data.projects[pr_name].fci * 100 + "%" }} </div>
                 </div>
                 <div class="col-xs-3 chart">
                     <d3-line-chart ng-transclude scope="data.projects.{{pr_name}}.fci_score_data" title="FCI Score">
@@ -132,6 +77,7 @@
                     </d3-line-chart>
                 </div>
         </div>
+        <hr />
     </div>
 
     <div ng-hide="has_data">
