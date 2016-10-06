@@ -15,21 +15,14 @@
             {
                 "region": "west-1.hooli.net",
                 "health": {
-                    "elastic": "<elastic_connection_string>",
-                    "elastic_index": "<index_with_data_in_required_format>"
+                    "elastic": "<elastic_url>/<elastic_index>/<elastic_type>"
                 },
                 "availability": {
-                    "graphite": "<graphite_connection_string>"
-                }
-            },
-            {
-                "region": "west-2.hooli.net",
-                "health": {
-                    "elastic": "<elastic_connection_string>",
-                    "elastic_index": "<index_with_data_in_required_format>"
-                },
-                "availability": {
-                    "graphite": "<graphite_connection_string>"
+                    "graphite": "<graphite_connection_string>",
+                    "services": {
+                        "nova": "<put_line_here>",
+                        "glance": "put_line_here",
+                    }
                 }
             }
         ]
