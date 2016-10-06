@@ -92,7 +92,8 @@ var line_chart = function(svg, title){
 
         var line = d3.line()
           .x(function(d) { return x(parse_date(d[0])); })
-          .y(function(d) { return y(d[1]); });
+          .y(function(d) { return y(d[1]); })
+          .defined(function(d) { return d[1] != null; })
 
         path.datum(data).transition().attr("d", line);
     }
