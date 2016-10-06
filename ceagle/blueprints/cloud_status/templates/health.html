@@ -57,7 +57,10 @@
 
         <div class="row report_line">
                 <div class="col-xs-2 pile">
-                    <div class="status-{{status(pr_name)}}"> {{ pr_name }} FCI <br /> {{ data.projects[pr_name].fci * 100 + "%" }} </div>
+                    <div class="status-{{status(pr_name)}}">
+                        {{ pr_name }} FCI <br />
+                        {{ (data.projects[pr_name].fci * 100).toFixed(2) + "%" }}
+                    </div>
                 </div>
                 <div class="col-xs-3 chart">
                     <d3-line-chart ng-transclude scope="data.projects.{{pr_name}}.fci_score_data" title="FCI Score">
