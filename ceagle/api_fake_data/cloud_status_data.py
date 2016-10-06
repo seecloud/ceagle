@@ -91,3 +91,24 @@ def overview_data():
             }
         }
     })
+
+
+def availability_data():
+    return flask.jsonify(**{
+        "project_names": ["nova", "glance", "cinder"],
+        "projects": {
+            "nova": {
+                "availability": 1,
+                "availability_data": _gen_values(1)
+            },
+            "glance": {
+                "availability": 0.9,
+                "availability_data": _gen_values(1)
+            },
+            "cinder": {
+                "availability": 0.9995,
+                "availability_data": _gen_values(1)
+            },
+
+        }
+    })
