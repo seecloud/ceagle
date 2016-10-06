@@ -69,3 +69,46 @@ def health_projects():
             }
         }
     })
+
+
+def overview_data():
+    return flask.jsonify(**{
+        "region_names": ["west-1.hooli.net",
+                         "west-2.hooli.net",
+                         "south-1.hooli.net"],
+        "regions": {
+            "west-1.hooli.net": {
+                "fci": 1.0,
+                "availability": 0.99999
+            },
+            "west-2.hooli.net": {
+                "fci": 1.0,
+                "availability": 0.99916
+            },
+            "south-1.hooli.net": {
+                "fci": 0.85,
+                "availability": 0.95
+            }
+        }
+    })
+
+
+def availability_data():
+    return flask.jsonify(**{
+        "project_names": ["nova", "glance", "cinder"],
+        "projects": {
+            "nova": {
+                "availability": 1,
+                "availability_data": _gen_values(1)
+            },
+            "glance": {
+                "availability": 0.9,
+                "availability_data": _gen_values(1)
+            },
+            "cinder": {
+                "availability": 0.9995,
+                "availability_data": _gen_values(1)
+            },
+
+        }
+    })

@@ -1,9 +1,117 @@
 {% extends "cs_layout.html" %}
 
+{% block htmlattr %} ng-app="overview_app" {% endblock %}
+
+{% block bodyattr %} ng-controller="overview_controller" {% endblock %}
+
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/angular-d3.js') }}"></script>
+
+    <script>
+        angular.module('overview_app',
+                       ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'd3.line_chart']);
+
+        angular.module('overview_app')
+          .controller('overview_controller', function ($scope, $http) {
+            $scope.data = {
+              "region_names": [],
+              "regions": {}
+            }
+
+            $scope.has_data = false;
+
+            var fetch_data = function(){
+              $http.get('/cloud_status/v1').
+                success(function(data, status, headers, config) {
+                  $scope.data = data;
+                  $scope.has_data = true;
+                }).
+                error(function(data, status, headers, config) {
+                  console.log("Can't fetch data status: " + status)
+                });
+            }
+
+            fetch_data();
+            setInterval(fetch_data, 5000);
+
+            $scope.availability_status = function(region){
+              var availability = $scope.data.regions[region].availability;
+              if (availability > 0.9999) return "green";
+              if (availability > 0.999) return "orange";
+              return "red";
+            }
+
+            $scope.health_status = function(region) {
+              var fci = $scope.data.regions[region].fci;
+              if (fci > 0.99) return "green";
+              if (fci > 0.95) return "orange";
+              return "red";
+            }
+        });
+    </script>
+
+    <style>
+      .pile.region_name {
+        width: 200px;
+        border-right: 1px solid #eee;
+        padding-right: 15px;
+
+      }
+
+      .pile.region_name div {
+        text-transform: none;
+      }
+    </style>
+
+{% endblock %}
+
 
 {% block body %}
 
-<h1> Cloud Status Overview</h1>
-<hr />
+    <h1> Cloud Status Overview</h1>
+    <p> This page shows API Availability and Health (based on FCI score) of all regions.</p>
+    <p> FCI score is ratio of successful codes (2xx, 3xx, 4xx) to all http codes. </p>
+
+    <hr />
+
+    {% raw %}
+    <div ng-repeat="region in data.region_names" ng-hide="!has_data">
+        <div class="row report_line">
+            <div class="col-xs-2 pile region_name">
+                <div class="status-{{availability_status(region)}}">
+                  {{region}}
+                </div>
+            </div>
+
+            <div class="col-xs-2 pile">
+                <div class="status-{{availability_status(region)}}">
+                    Availability
+                    <br />
+                    {{ (data.regions[region].availability * 100).toFixed(2) + "%" }}
+                </div>
+            </div>
+
+            <div class="col-xs-2 pile">
+                <div class="status-{{health_status(region)}}">
+                    Health (FCI)
+                    <br />
+                    {{ (data.regions[region].fci * 100).toFixed(2) + "%" }}
+                </div>
+            </div>
+        </div>
+
+        <hr />
+    </div>
+
+    <div ng-hide="has_data">
+        <center>
+            <p>Sorry</p>
+            <p> Cloud status data is not available. </p>
+        </center>
+    </div>
+
+    {% endraw %}
+
 
 {% endblock %}

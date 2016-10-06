@@ -1,9 +1,88 @@
 {% extends "cs_layout.html" %}
 
+{% block htmlattr %} ng-app="availability_app" {% endblock %}
+
+{% block bodyattr %} ng-controller="availability_controller" {% endblock %}
+
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/angular-d3.js') }}"></script>
+
+    <script>
+        angular.module('availability_app',
+                       ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'd3.line_chart']);
+
+        angular.module('availability_app')
+          .controller('availability_controller', function ($scope, $http) {
+            $scope.data = {
+              "project_names": [],
+              "projects": {}
+            }
+
+            $scope.has_data = false;
+
+            var fetch_data = function(){
+              $http.get('/cloud_status/availability/v1').
+                success(function(data, status, headers, config) {
+                  $scope.data = data;
+                  if ($scope.data.project_names)
+                    $scope.has_data = true;
+                }).
+                error(function(data, status, headers, config) {
+                  console.log("Can't fetch data status: " + status)
+                });
+            }
+
+            fetch_data();
+            setInterval(fetch_data, 5000);
+
+            $scope.status = function(pr_name){
+              var availability = $scope.data.projects[pr_name].availability;
+              if (availability >= 0.9999) return "green";
+              if (availability > 0.999) return "orange";
+              return "red";
+            }
+        });
+
+    </script>
+{% endblock %}
 
 {% block body %}
 
-<h1>API Availability</h1>
-<hr />
+    <h1>API Availability</h1>
+
+    <p> API Availability is based on results of periodic requests to services. </p>
+    <p> Service is count as down if there is no response</p>
+    <hr />
+
+   {% raw %}
+
+    <div ng-repeat="pr_name in data.project_names">
+
+        <div class="row report_line">
+                <div class="col-xs-2 pile">
+                    <div class="status-{{status(pr_name)}}">
+                        {{ pr_name }} Availability <br />
+                        {{ (data.projects[pr_name].availability * 100).toFixed(2) + "%" }}
+                    </div>
+                </div>
+                <div class="col-xs-6 chart">
+                    <d3-line-chart ng-transclude scope="data.projects.{{pr_name}}.availability_data" title="Availability (%)">
+                    </d3-line-chart>
+                </div>
+        </div>
+        <hr />
+    </div>
+
+    <div ng-hide="has_data">
+        <center>
+            <p>Sorry</p>
+            <p> API Availability data is not available. </p>
+        </center>
+    </div>
+
+    {% endraw %}
+
 
 {% endblock %}
+
