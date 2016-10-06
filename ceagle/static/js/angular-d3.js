@@ -40,7 +40,7 @@ angular.module('d3.line_chart')
 
 var line_chart = function(svg, title){
     var margin = {top: 15, right: 20, bottom: 20, left: 35}
-    var parse_date = d3.timeParse("%d-%b-%yT%H");
+    var parse_date = d3.timeParse("%Y-%m-%dT%H:%M");
 
     svg.attr("class", "line_chart")
 
@@ -66,7 +66,7 @@ var line_chart = function(svg, title){
         var y = d3.scaleLinear().range([height, 0]);
 
         x.domain(d3.extent(data, function(d) { return parse_date(d[0]); }));
-        y.domain(d3.extent(data, function(d) { return d[1]; }));
+        y.domain(d3.extent(data, function(d) { return d[1] }));
 
         svg
           .attr("width", width + margin.left + margin.right)
