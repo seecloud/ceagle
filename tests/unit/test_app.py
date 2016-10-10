@@ -22,7 +22,7 @@ class AppTestCase(test.TestCase):
     def test_index(self):
         rv = self.app.get("/")
         self.assertEqual(200, rv.status_code)
-        self.assertIn("Adorable DevOps Portal!", str(rv.data))
+        self.assertIn("DevOps Portal!", str(rv.data))
 
     def test_cloud_status(self):
         rv = self.app.get("/cloud_status/")
