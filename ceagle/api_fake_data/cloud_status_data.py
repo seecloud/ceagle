@@ -20,13 +20,13 @@ import flask
 
 def _gen_values(mode):
     if mode == 1:
-        return [["24-Sep-16T%s" % i, random.uniform(0.9, 1)]
+        return [["2016-09-16T%s:00" % i, random.uniform(0.9997, 1)]
                 for i in range(24)]
     elif mode == 2:
-        return [["24-Sep-16T%s" % i, random.randint(20, 2000)]
+        return [["2016-09-16T%s:00" % i, random.randint(20, 2000)]
                 for i in range(24)]
     else:
-        return [["24-Sep-16T%s" % i, random.randint(100, 40000)]
+        return [["2016-09-16T%s:00" % i, random.randint(100, 40000)]
                 for i in range(24)]
 
 
@@ -94,20 +94,24 @@ def overview_data():
 
 
 def availability_data():
+
+    data = [_gen_values(1) for i in range(3)]
+    data = map(lambda x: [x, sum(x_[1] for x_ in x) / len(x)], data)
+
     return flask.jsonify(**{
         "project_names": ["nova", "glance", "cinder"],
         "projects": {
             "nova": {
-                "availability": 1,
-                "availability_data": _gen_values(1)
+                "availability": data[0][1],
+                "availability_data": data[0][0]
             },
             "glance": {
-                "availability": 0.9,
-                "availability_data": _gen_values(1)
+                "availability": data[1][1],
+                "availability_data": data[1][0]
             },
             "cinder": {
-                "availability": 0.9995,
-                "availability_data": _gen_values(1)
+                "availability": data[2][1],
+                "availability_data": data[2][0]
             },
 
         }
