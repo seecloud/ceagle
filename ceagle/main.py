@@ -52,11 +52,23 @@ for url_prefix, blueprint in cloud_status.get_blueprints():
 
 @app.context_processor
 def inject_config():
+    load_config()
     return dict(cloud_status_conf=app.config["cloud_status"],
                 global_conf=app.config["global"])
 
 
-def load_config(path="/etc/ceagle/config.json"):
+CONFIG_LOADED = False
+
+
+def load_config(path=None):
+    global CONFIG_LOADED
+
+    if CONFIG_LOADED:
+        return
+
+    CONFIG_LOADED = True
+    path = path or os.environ.get("CEAGLE_CONF", "/etc/ceagle/config.json")
+
     try:
         with open(path) as f:
             config = json.load(f)
@@ -71,9 +83,7 @@ def load_config(path="/etc/ceagle/config.json"):
 
 
 def main():
-
-    load_config(path=os.environ.get("CEAGLE_CONF", "/etc/ceagle/config.json"))
-
+    load_config()
     app.run(host=app.config.get("HOST", "0.0.0.0"),
             port=app.config.get("PORT", 5000))
 
