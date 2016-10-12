@@ -47,17 +47,16 @@
 {% endblock %}
 
 {% block body %}
-    <h1> Fuel DevOps Portal!</h1>
-
-    <p>
-    Running clouds is very complicated task hopefully now we have Cloud Eagle
-    that simplifies operating clouds by providing multiple functions.
-    </p>
+    <h1> {{global_conf.get("name", "Cloud Eagle")}} Portal!</h1>
 
     <div class="rows marketing">
         <div class="col-md-3">
             <h4>API Health</h4>
             <p>Shows API healthiness based on HTTP response codes, durations and sizes analyze</p>
+        </div>
+        <div class="col-md-3">
+            <h4>API Availability</h4>
+            <p> Shows API Availability based on metrics collected by monitoring services </p>
         </div>
     </div>
 
@@ -67,10 +66,6 @@
     </div>
 
     <div class="rows marketing">
-        <div class="col-md-3">
-            <h4>API Availability</h4>
-            <p> Shows API Availability based on metrics collected by monitoring services </p>
-        </div>
         <div class="col-md-3">
             <h4>Cloud Performance</h4>
             <p> Shows Key Cloud Performance Metrics based on results of synthetic transactions. </p>
@@ -90,6 +85,10 @@
         <div class="col-md-3">
             <h4>Security Monitoring</h4>
             <p> Monitor security of you cloud resources like VM, Security Groups and Images.</p>
+        </div>
+        <div class="col-md-3">
+            <h4>Infra Management</h4>
+            <p> Embedded UI to infra management: Baremetal (MaaS), Source Control, Packages, Jenkins CI/CD, ...</p>
         </div>
     </div>
 

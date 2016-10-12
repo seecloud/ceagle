@@ -23,12 +23,12 @@
 .nav-sidebar > li > a {
   padding-right: 20px;
   padding-left: 20px;
+  margin-bottom: 1px;
 }
 
 .nav-sidebar > li.active {
   font-weight: 500;
 }
-
 
 .nav-sidebar a {
   color: #EF9F3F;
@@ -56,18 +56,15 @@
   background-color: gray;
 }
 
-
 .nav-sidebar ul.nested_menu li{
   margin-top: 5px;
   margin-bottom: 5px;
   border-radius: 5px;
 }
 
-
 .nav-sidebar ul.nested_menu li.active {
   background-color: #666;
 }
-
 
 .nav-sidebar ul.nested_menu a {
   display: block;
@@ -76,22 +73,23 @@
   background-color: transparent!important;
 }
 
-
 .nav-sidebar ul.nested_menu .active > a {
   font-weight: bold;
   color: white;
 
 }
 
-
 .navbar-header a span {
   margin-left: 10px;
-  font-size: 20px;
+  font-size: 18px;
   vertical-align: middle;
   font: "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #ec8e1d;
 }
 
+.navbar-header a {
+   text-decoration: none!important;
+}
 
 .navbar.header {
   background-color: #666;
@@ -102,6 +100,10 @@
   border-width: 0px;
   border-bottom-width: 2px;
   border-bottom-color: #ec8e1d;
+}
+
+.navbar-header a img {
+   height: 40px;
 }
 
 /*
