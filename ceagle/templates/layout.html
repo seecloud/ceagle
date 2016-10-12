@@ -9,10 +9,10 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <link rel="icon" href="{{ url_for('static', filename='pics/favicon.ico') }}" type="image/x-icon" />
-        <title> {{ global_conf["portal_name"] }} - {{ title }} </title>
+        <title> {{ global_conf["title"] }} - {{ title }} </title>
 
         <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
-        <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/' + global_conf.get('css', 'main.css')) }}" rel="stylesheet">
 
         <script src="{{ url_for('static', filename='js/d3.js') }}" > </script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
@@ -28,8 +28,8 @@
         <nav class="navbar navbar-inverse header">
             <div class="navbar-header">
                 <a href="#">
-                    <img src="{{ url_for('static', filename='pics/logo.png') }}" height="40px" />
-                    <span>{{ global_conf["portal_name"] }}</span>
+                    <img src="{{ url_for('static', filename='pics/' + global_conf.get('logo', 'logo.png')) }}" />
+                    <span>{{ global_conf.get("logo_txt", "Cloud Eagle") }}</span>
                 </a>
             </div>
         </nav>
@@ -38,14 +38,33 @@
             <div class="row">
                 <div class="col-md-2 sidebar menu">
                     <ul class="nav nav-sidebar">
-                      <li {% if menu == "index" %} class="active"{% endif %}>
-                        <a href="/">Home</a>
-                     </li>
-                      <li {% if menu == "cloud_status" %} class="active"{% endif %}>
-                        <a href="/cloud_status">Cloud Status</a>
-                        {% block cloud_stats_menu %} {% endblock %}
-                      </li>
-                      <li {% if menu == "about" %} class="active"{% endif %}><a href="/about">About</a></li>
+                        <li {% if menu == "index" %} class="active"{% endif %}>
+                            <a href="/">Home</a>
+                        </li>
+                        <li {% if menu == "cloud_status" %} class="active"{% endif %}>
+                            <a href="/cloud_status">Cloud Status</a>
+                            {% block cloud_stats_menu %} {% endblock %}
+                        </li>
+
+                        <li {% if menu == "cis" %} class="active"{% endif %}>
+                            <a href="/cis"> Cloud Intelligence </a>
+                        </li>
+                        <li {% if menu == "capacity" %} class="active"{% endif %}>
+                            <a href="/capacity"> Capacity Management </a>
+                        </li>
+                        <li {% if menu == "optimization" %} class="active"{% endif %}>
+                            <a href="/optimization"> Cloud Optimization</a>
+                        </li>
+                        <li {% if menu == "security" %} class="active"{% endif %}>
+                            <a href="/security"> Security Monitoring </a>
+                        </li>
+                        <li {% if menu == "infra" %} class="active"{% endif %}>
+                            <a href="/infra"> Infrastructure</a>
+                            {% block infra_menu %} {% endblock %}
+                        </li>
+                        <li {% if menu == "about" %} class="active"{% endif %}>
+                            <a href="/about">About</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-md-8 col-md-offset-1 main">

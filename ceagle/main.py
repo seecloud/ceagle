@@ -18,7 +18,12 @@ import os
 
 import flask
 
+from ceagle.blueprints.capacity import capacity
 from ceagle.blueprints.cloud_status import cloud_status
+from ceagle.blueprints.infrastructure import infrastructure
+from ceagle.blueprints.intelligence import intelligence
+from ceagle.blueprints.optimization import optimization
+from ceagle.blueprints.security import security
 
 
 app = flask.Flask(__name__)
@@ -46,8 +51,10 @@ def not_found(error):
                                  title="Not Found"), 404
 
 
-for url_prefix, blueprint in cloud_status.get_blueprints():
-    app.register_blueprint(blueprint, url_prefix=url_prefix)
+for bp in [cloud_status, infrastructure, intelligence, optimization, security,
+           capacity]:
+    for url_prefix, blueprint in bp.get_blueprints():
+        app.register_blueprint(blueprint, url_prefix=url_prefix)
 
 
 @app.context_processor
@@ -79,6 +86,7 @@ def load_config(path=None):
     app.config.update(config.get("flask", {}))
     app.config["cloud_status"] = config.get("cloud_status",
                                             {"enabled": False})
+    app.config["infra"] = config.get("infra", {"pages": []})
     app.config["global"] = config.get("global", {"portal_name": "Cloud Eagle"})
 
 
