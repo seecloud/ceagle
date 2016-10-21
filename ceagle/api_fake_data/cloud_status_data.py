@@ -15,8 +15,6 @@
 
 import random
 
-import flask
-
 
 def _gen_values(mode):
     if mode == 1:
@@ -31,7 +29,7 @@ def _gen_values(mode):
 
 
 def health_projects():
-    return flask.jsonify(**{
+    return {
         "project_names": ["keystone", "nova", "glance", "cinder", "neutron"],
         "projects": {
 
@@ -68,11 +66,11 @@ def health_projects():
 
             }
         }
-    })
+    }
 
 
 def overview_data():
-    return flask.jsonify(**{
+    return {
         "region_names": ["west-1.hooli.net",
                          "west-2.hooli.net",
                          "south-1.hooli.net"],
@@ -90,7 +88,7 @@ def overview_data():
                 "availability": 0.95
             }
         }
-    })
+    }
 
 
 def availability_data():
@@ -98,7 +96,7 @@ def availability_data():
     data = [_gen_values(1) for i in range(3)]
     data = map(lambda x: [x, sum(x_[1] for x_ in x) / len(x)], data)
 
-    return flask.jsonify(**{
+    return {
         "project_names": ["nova", "glance", "cinder"],
         "projects": {
             "nova": {
@@ -115,4 +113,4 @@ def availability_data():
             },
 
         }
-    })
+    }
