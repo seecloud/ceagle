@@ -13,13 +13,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from ceagle.services import service
+
+from tests.unit import test
 
 
-class Overview(service.ServiceAPI):
-    """Intelligence."""
-
-    ROUTES = [("/cis/", {})]
-
-    def get(self):
-        return {"cis": {"dummy": "data"}}
+class ServiceAPITestCase(test.TestCase):
+    """TODO."""

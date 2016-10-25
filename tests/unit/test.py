@@ -23,8 +23,24 @@ class TestCase(testtools.TestCase):
 
     def setUp(self):
         super(TestCase, self).setUp()
-        self.addCleanup(mock.patch.stopall)
-
-        main.load_config()
         main.app.config["TESTING"] = True
         self.app = main.app.test_client()
+
+    def test_load_config(self):
+        pass
+
+    @mock.patch("ceagle.main.flask.render_template", return_value="foo_api")
+    def test_index(self, mock_render_template):
+        main.api_map = "api map"
+        rv = self.app.get("/")
+        self.assertEqual(200, rv.status_code)
+        self.assertIn("foo_api", str(rv.data))
+        mock_render_template.assert_called_once_with(
+            "api_index.html", api="api map")
+
+    @mock.patch("ceagle.main.flask.jsonify", return_value="foo_json")
+    def test_not_found(self, mock_jsonify):
+        rv = self.app.get("/unexisting/path/to/somewhere/else")
+        self.assertEqual(404, rv.status_code)
+        self.assertIn("foo_json", str(rv.data))
+        mock_jsonify.assert_called_once_with({"error": "Not found"})

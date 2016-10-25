@@ -13,16 +13,13 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import flask
+from ceagle.services import service
 
 
-optimization = flask.Blueprint("optimization", __name__)
+class Overview(service.ServiceAPI):
+    """Optimization."""
 
+    ROUTES = [("/optimization/", {})]
 
-@optimization.route("/")
-def index():
-    return flask.JSONIFY({"optimization": {"dummy": "data"}})
-
-
-def get_blueprints():
-    return [["/optimization", optimization]]
+    def get(self):
+        return {"optimization": {"dummy": "data"}}
