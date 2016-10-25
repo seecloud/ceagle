@@ -96,7 +96,7 @@ def overview_data():
 def availability_data():
 
     data = [_gen_values(1) for i in range(3)]
-    data = map(lambda x: [x, sum(x_[1] for x_ in x) / len(x)], data)
+    data = list(map(lambda x: [x, sum(x_[1] for x_ in x) / len(x)], data))
 
     return flask.jsonify(**{
         "project_names": ["nova", "glance", "cinder"],

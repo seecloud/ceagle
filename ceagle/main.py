@@ -18,12 +18,12 @@ import os
 
 import flask
 
-from ceagle.blueprints.capacity import capacity
-from ceagle.blueprints.cloud_status import cloud_status
-from ceagle.blueprints.infrastructure import infrastructure
-from ceagle.blueprints.intelligence import intelligence
-from ceagle.blueprints.optimization import optimization
-from ceagle.blueprints.security import security
+from ceagle.services.v1.capacity import capacity
+from ceagle.services.v1.cloud_status import cloud_status
+from ceagle.services.v1.infrastructure import infrastructure
+from ceagle.services.v1.intelligence import intelligence
+from ceagle.services.v1.optimization import optimization
+from ceagle.services.v1.security import security
 
 
 app = flask.Flask(__name__)
@@ -33,35 +33,15 @@ app.config.update({"SECRET_KEY": "change_this_key_in_prod"})
 app.config.from_envvar("CEAGLE_SETTINGS", silent=True)
 
 
-@app.route("/", methods=["GET"])
-def index():
-    return flask.render_template("index.html", menu="index", title="Index")
-
-
-@app.route("/about", methods=["GET"])
-def about():
-    return flask.render_template("about.html",
-                                 menu="about", title="About")
-
-
 @app.errorhandler(404)
 def not_found(error):
-    return flask.render_template("errors/not_found.html",
-                                 menu="error",
-                                 title="Not Found"), 404
+    return flask.jsonify({"error": "Not found"}), 404
 
 
 for bp in [cloud_status, infrastructure, intelligence, optimization, security,
            capacity]:
     for url_prefix, blueprint in bp.get_blueprints():
         app.register_blueprint(blueprint, url_prefix=url_prefix)
-
-
-@app.context_processor
-def inject_config():
-    load_config()
-    return dict(cloud_status_conf=app.config["cloud_status"],
-                global_conf=app.config["global"])
 
 
 CONFIG_LOADED = False
@@ -84,10 +64,6 @@ def load_config(path=None):
         config = {}
 
     app.config.update(config.get("flask", {}))
-    app.config["cloud_status"] = config.get("cloud_status",
-                                            {"enabled": False})
-    app.config["infra"] = config.get("infra", {"pages": []})
-    app.config["global"] = config.get("global", {"portal_name": "Cloud Eagle"})
 
 
 def main():

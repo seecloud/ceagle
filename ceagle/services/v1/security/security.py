@@ -16,17 +16,13 @@
 import flask
 
 
-cis = flask.Blueprint("cis", __name__,
-                      template_folder="templates")
+security = flask.Blueprint("security", __name__)
 
 
-@cis.route("/")
+@security.route("/")
 def index():
-    return flask.render_template("intelligence.html",
-                                 menu="cis",
-                                 submenu="overview",
-                                 title="Cloud Intelligence System")
+    return flask.jsonify({"security": {"dummy": "data"}})
 
 
 def get_blueprints():
-    return [["/cis", cis]]
+    return [["/security", security]]

@@ -14,37 +14,36 @@
 #    under the License.
 
 
+import json
+
 from tests.unit import test
 
 
 class AppTestCase(test.TestCase):
 
-    def test_index(self):
-        rv = self.app.get("/")
-        self.assertEqual(200, rv.status_code)
-        self.assertIn("Portal!", str(rv.data))
-
     def test_cloud_status(self):
-        rv = self.app.get("/cloud_status/")
+        rv = self.app.get("/cloud_status/v1/")
         self.assertEqual(200, rv.status_code)
-        self.assertIn("Cloud Status Overview", str(rv.data))
+        res = json.loads(rv.data.decode())
+        self.assertIn("region_names", res)
+        self.assertIn("regions", res)
 
     def test_cloud_status_health(self):
-        rv = self.app.get("/cloud_status/health/")
+        rv = self.app.get("/cloud_status/health/v1")
         self.assertEqual(200, rv.status_code)
-        self.assertIn("API Health", str(rv.data))
+        res = json.loads(rv.data.decode())
+        self.assertIn("project_names", res)
+        self.assertIn("projects", res)
 
     def test_cloud_status_availability(self):
-        rv = self.app.get("/cloud_status/availability/")
+        rv = self.app.get("/cloud_status/availability/v1")
         self.assertEqual(200, rv.status_code)
-        self.assertIn("API Availability", str(rv.data))
-
-    def test_about(self):
-        rv = self.app.get("/about")
-        self.assertEqual(200, rv.status_code)
-        self.assertIn("About Cloud Eagle", str(rv.data))
+        res = json.loads(rv.data.decode())
+        self.assertIn("project_names", res)
+        self.assertIn("projects", res)
 
     def test_not_found(self):
         rv = self.app.get("/unexisting/path/to/somewhere/else")
         self.assertEqual(404, rv.status_code)
-        self.assertIn("Not Found", str(rv.data))
+        res = json.loads(rv.data.decode())
+        self.assertEqual({"error": "Not found"}, res)

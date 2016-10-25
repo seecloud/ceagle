@@ -16,17 +16,13 @@
 import flask
 
 
-security = flask.Blueprint("security", __name__,
-                           template_folder="templates")
+infra = flask.Blueprint("infra", __name__)
 
 
-@security.route("/")
+@infra.route("/")
 def index():
-    return flask.render_template("security.html",
-                                 menu="security",
-                                 submenu="overview",
-                                 title="Security Monitoring")
+    return flask.jsonify({"infrastructure": {"dummy": "data"}})
 
 
 def get_blueprints():
-    return [["/security", security]]
+    return [["/infra", infra]]

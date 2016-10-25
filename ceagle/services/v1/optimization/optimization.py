@@ -16,16 +16,12 @@
 import flask
 
 
-optimization = flask.Blueprint("optimization", __name__,
-                               template_folder="templates")
+optimization = flask.Blueprint("optimization", __name__)
 
 
 @optimization.route("/")
 def index():
-    return flask.render_template("optimization.html",
-                                 menu="optimization",
-                                 submenu="overview",
-                                 title="Resource Optimization")
+    return flask.JSONIFY({"optimization": {"dummy": "data"}})
 
 
 def get_blueprints():
