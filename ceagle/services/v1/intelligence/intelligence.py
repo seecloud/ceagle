@@ -13,20 +13,13 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import flask
+from ceagle.services import service
 
 
-security = flask.Blueprint("security", __name__,
-                           template_folder="templates")
+class Overview(service.ServiceAPI):
+    """Intelligence."""
 
+    ROUTES = [("/cis/", {})]
 
-@security.route("/")
-def index():
-    return flask.render_template("security.html",
-                                 menu="security",
-                                 submenu="overview",
-                                 title="Security Monitoring")
-
-
-def get_blueprints():
-    return [["/security", security]]
+    def get(self):
+        return {"cis": {"dummy": "data"}}

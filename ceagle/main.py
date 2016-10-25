@@ -13,85 +13,59 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import json
+from __future__ import print_function
 import os
 
 import flask
 
-from ceagle.blueprints.capacity import capacity
-from ceagle.blueprints.cloud_status import cloud_status
-from ceagle.blueprints.infrastructure import infrastructure
-from ceagle.blueprints.intelligence import intelligence
-from ceagle.blueprints.optimization import optimization
-from ceagle.blueprints.security import security
+from ceagle.services import v1
 
 
 app = flask.Flask(__name__)
-
-app.config.from_object(__name__)
-app.config.update({"SECRET_KEY": "change_this_key_in_prod"})
-app.config.from_envvar("CEAGLE_SETTINGS", silent=True)
+api_map = []
 
 
-@app.route("/", methods=["GET"])
+def load_config():
+    conf_defaults = {"SECRET_KEY": "change_this_key_in_prod"}
+    app.config.update(conf_defaults)
+
+    settings = os.environ.get("CEAGLE_CONF", "settings_local")
+    try:
+        app.config.from_object(settings)
+    except ImportError:
+        print("Module '%s' is not found. Using defaults..." % settings)
+
+
+def register_routes(svc_classes, uri_prefix=""):
+    for cls in svc_classes:
+        for i, route in enumerate(cls.ROUTES):
+            route_uri, options = route
+            uri = uri_prefix + route_uri
+            endpoint = ".".join((cls.__module__, cls.__name__))
+            api_map.append({"uri": uri,
+                            "methods": cls.methods,
+                            "endpoint": endpoint,
+                            "doc": cls.__doc__})
+            view = cls.as_view(endpoint + "#%i" % i)
+            print("Registering route: %s -> %s" % (uri, endpoint))
+            app.add_url_rule(uri, view_func=view, **options)
+
+load_config()
+register_routes(v1.SERVICES, "/api/v1")
+
+
+@app.route("/")
 def index():
-    return flask.render_template("index.html", menu="index", title="Index")
-
-
-@app.route("/about", methods=["GET"])
-def about():
-    return flask.render_template("about.html",
-                                 menu="about", title="About")
+    """Expose APIs for development porposes."""
+    return flask.render_template("api_index.html", api=api_map)
 
 
 @app.errorhandler(404)
 def not_found(error):
-    return flask.render_template("errors/not_found.html",
-                                 menu="error",
-                                 title="Not Found"), 404
-
-
-for bp in [cloud_status, infrastructure, intelligence, optimization, security,
-           capacity]:
-    for url_prefix, blueprint in bp.get_blueprints():
-        app.register_blueprint(blueprint, url_prefix=url_prefix)
-
-
-@app.context_processor
-def inject_config():
-    load_config()
-    return dict(cloud_status_conf=app.config["cloud_status"],
-                global_conf=app.config["global"])
-
-
-CONFIG_LOADED = False
-
-
-def load_config(path=None):
-    global CONFIG_LOADED
-
-    if CONFIG_LOADED:
-        return
-
-    CONFIG_LOADED = True
-    path = path or os.environ.get("CEAGLE_CONF", "/etc/ceagle/config.json")
-
-    try:
-        with open(path) as f:
-            config = json.load(f)
-    except IOError as e:
-        print("Config at '%s': %s" % (path, e))
-        config = {}
-
-    app.config.update(config.get("flask", {}))
-    app.config["cloud_status"] = config.get("cloud_status",
-                                            {"enabled": False})
-    app.config["infra"] = config.get("infra", {"pages": []})
-    app.config["global"] = config.get("global", {"portal_name": "Cloud Eagle"})
+    return flask.jsonify({"error": "Not found"}), 404
 
 
 def main():
-    load_config()
     app.run(host=app.config.get("HOST", "0.0.0.0"),
             port=app.config.get("PORT", 5000))
 

@@ -13,20 +13,22 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import flask
+from ceagle.services import service
 
 
-optimization = flask.Blueprint("optimization", __name__,
-                               template_folder="templates")
+class Overview(service.ServiceAPI):
+    """Infrastructure overview."""
+
+    ROUTES = [("/infra/", {})]
+
+    def get(self):
+        return {"infrastructure": {"dummy": "data"}}
 
 
-@optimization.route("/")
-def index():
-    return flask.render_template("optimization.html",
-                                 menu="optimization",
-                                 submenu="overview",
-                                 title="Resource Optimization")
+class RemotePage(service.ServiceAPI):
+    """Remote page."""
 
+    ROUTES = [("/infra/<page>", {})]
 
-def get_blueprints():
-    return [["/optimization", optimization]]
+    def get(self, page):
+        return {"infrastructure": {"page": page}}

@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>API Map</title>
+  <style>
+    body { margin:0; padding:0; font-family:arial, sans }
+    .header { width:100%; margin:0 0 15px; padding:10px 15px; background:#000; color:#fff }
+    .content { margin:0; padding:0; width:100% }
+    table { border:none }
+    th { padding:3px 15px; text-align:left; font-size:14px }
+    td { padding:2px 15px; text-align:left; font-size:14px; color:#888 }
+    td a { color:#369; text-decoration:none }
+  </style>
+</head>
+<body>
+  <div class="header">
+    API Map
+  </div>
+  <div class="content">
+    <table>
+      <thead>
+        <th>URL
+        <th>Methods
+        <th>Endpoint
+        <th>Doc
+      </thead>
+      <tbody>{% for i in api %}
+        <tr>
+          <td><a href="{{i.uri}}" target="_blank">{{i.uri}}</a>
+          <td>{% for m in i.methods %} {{m}}{% endfor %}
+          <td>{{i.endpoint}}
+          <td>{{i.doc}}
+        </tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
