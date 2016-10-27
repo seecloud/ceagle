@@ -1,0 +1,6 @@
+{
+  "status_code": 404,
+  "error": {
+    "message": "Region 'foo.example.org' not found"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-03/schema",
+  "properties": {
+    "status_code": {
+      "type": "number",
+      "required": true
+    },
+    "error": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "message": {
+          "type": "string",
+          "required": true
+        }
+      }
+    }
+  },
+  "type": "object",
+  "required": true
+}
