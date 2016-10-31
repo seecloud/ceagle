@@ -21,14 +21,11 @@ import requests
 from ceagle.api_fake_data import cloud_status_data
 
 
-overview = flask.Blueprint("overview", __name__,
-                           template_folder="templates")
+overview = flask.Blueprint("overview", __name__)
 
-health = flask.Blueprint("health", __name__,
-                         template_folder="templates")
+health = flask.Blueprint("health", __name__)
 
-availability = flask.Blueprint("availability", __name__,
-                               template_folder="templates")
+availability = flask.Blueprint("availability", __name__)
 
 
 def get_blueprints():
@@ -41,10 +38,7 @@ def get_blueprints():
 
 @overview.route("/")
 def overview_index():
-    return flask.render_template("overview.html",
-                                 menu="cloud_status",
-                                 submenu="overview",
-                                 title="Cloud Status Overview")
+    return flask.jsonify({"result": {"cloud_status": "index"}})
 
 
 @overview.route("/v1")
@@ -56,10 +50,7 @@ def overview_data_v1():
 @health.route("/", defaults={"region": "all"})
 @health.route("/<region>")
 def health_index(region):
-    return flask.render_template("health.html",
-                                 menu="cloud_status",
-                                 submenu="health",
-                                 title="Cloud Status Health")
+    return flask.jsonify({"result": {"cloud_status": "health"}})
 
 
 @health.route("/v1", defaults={"region": "all"})
@@ -157,10 +148,7 @@ def health_data_v1(region):
 @availability.route("/", defaults={"region": "all"})
 @availability.route("/<region>")
 def availability_index(region):
-    return flask.render_template("availability.html",
-                                 menu="cloud_status",
-                                 submenu="availability",
-                                 title="API Health")
+    return flask.jsonify({"result": {"cloud_status": "availability"}})
 
 
 @availability.route("/v1", defaults={"region": "all"})

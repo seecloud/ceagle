@@ -16,16 +16,12 @@
 import flask
 
 
-capacity = flask.Blueprint("capacity", __name__,
-                           template_folder="templates")
+capacity = flask.Blueprint("capacity", __name__)
 
 
 @capacity.route("/")
 def index():
-    return flask.render_template("capacity.html",
-                                 menu="capacity",
-                                 submenu="overview",
-                                 title="Capacity Management")
+    return flask.jsonify({"result": {"capacity": "dummy"}})
 
 
 def get_blueprints():

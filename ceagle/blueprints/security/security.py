@@ -16,16 +16,12 @@
 import flask
 
 
-security = flask.Blueprint("security", __name__,
-                           template_folder="templates")
+security = flask.Blueprint("security", __name__)
 
 
 @security.route("/")
 def index():
-    return flask.render_template("security.html",
-                                 menu="security",
-                                 submenu="overview",
-                                 title="Security Monitoring")
+    return flask.jsonify({"result": {"security": "dummy"}})
 
 
 def get_blueprints():
