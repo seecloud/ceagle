@@ -14,6 +14,7 @@
 #    under the License.
 
 import json
+import logging
 import os
 
 import flask
@@ -27,10 +28,13 @@ from ceagle.api.v1 import security
 
 
 app = flask.Flask(__name__)
+config_path = os.environ.get("CEAGLE_CONF", "etc/ceagle/config.json")
 
-app.config.from_object(__name__)
-app.config.update({"SECRET_KEY": "change_this_key_in_prod"})
-app.config.from_envvar("CEAGLE_SETTINGS", silent=True)
+try:
+    config = json.load(open(config_path))
+    app.config.update(config)
+except IOError as e:
+    logging.warning("Config at '%s': %s" % (config_path, e))
 
 
 @app.errorhandler(404)
@@ -41,25 +45,10 @@ def not_found(error):
 for bp in [cloud_status, infrastructure, intelligence, optimization, security,
            capacity]:
     for url_prefix, blueprint in bp.get_blueprints():
-        app.register_blueprint(blueprint, url_prefix=url_prefix)
-
-
-def load_config(path=None):
-    path = path or os.environ.get("CEAGLE_CONF", "/etc/ceagle/config.json")
-
-    try:
-        with open(path) as f:
-            config = json.load(f)
-            app.config.update(config)
-    except IOError as e:
-        print("Config at '%s': %s" % (path, e))
-
-
-load_config()
+        app.register_blueprint(blueprint, url_prefix="/api/v1%s" % url_prefix)
 
 
 def main():
-    load_config()
     app.run(host=app.config.get("HOST", "0.0.0.0"),
             port=app.config.get("PORT", 5000))
 
