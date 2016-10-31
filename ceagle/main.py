@@ -18,12 +18,12 @@ import os
 
 import flask
 
-from ceagle.blueprints.capacity import capacity
-from ceagle.blueprints.cloud_status import cloud_status
-from ceagle.blueprints.infrastructure import infrastructure
-from ceagle.blueprints.intelligence import intelligence
-from ceagle.blueprints.optimization import optimization
-from ceagle.blueprints.security import security
+from ceagle.api.v1 import capacity
+from ceagle.api.v1 import cloud_status
+from ceagle.api.v1 import infrastructure
+from ceagle.api.v1 import intelligence
+from ceagle.api.v1 import optimization
+from ceagle.api.v1 import security
 
 
 app = flask.Flask(__name__)
