@@ -20,7 +20,7 @@ optimization = flask.Blueprint("optimization", __name__)
 
 
 @optimization.route("/")
-def index():
+def get_optimization():
     return flask.jsonify({"result": {"optimization": "dummy"}})
 
 

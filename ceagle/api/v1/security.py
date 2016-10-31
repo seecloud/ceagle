@@ -20,7 +20,7 @@ security = flask.Blueprint("security", __name__)
 
 
 @security.route("/")
-def index():
+def get_security():
     return flask.jsonify({"result": {"security": "dummy"}})
 
 

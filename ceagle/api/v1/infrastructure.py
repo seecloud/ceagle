@@ -20,12 +20,12 @@ infra = flask.Blueprint("infra", __name__)
 
 
 @infra.route("/")
-def index():
+def get_infrastructure():
     return flask.jsonify({"result": {"infrastructure": "dummy"}})
 
 
 @infra.route("/<page>")
-def remote_page(page):
+def get_infrastructure_page(page):
     return flask.jsonify({"result": {"infrastructure": page}})
 
 

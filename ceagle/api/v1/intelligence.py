@@ -20,8 +20,8 @@ cis = flask.Blueprint("cis", __name__)
 
 
 @cis.route("/")
-def index():
-    return flask.jsonify({"result": {"intelligence": "dummy"}})
+def get_intelligence():
+    return flask.jsonify({"result": {"cis": "dummy"}})
 
 
 def get_blueprints():

@@ -21,17 +21,17 @@ class AppTestCase(test.TestCase):
     def test_cloud_status(self):
         code, resp = self.get("/api/v1/cloud_status/")
         self.assertEqual(200, code)
-        self.assertIn("result", resp)
+        self.assertIn("regions", resp)
 
     def test_cloud_status_health(self):
         code, resp = self.get("/api/v1/cloud_status/health/")
         self.assertEqual(200, code)
-        self.assertEqual({"result": {"cloud_status": "health"}}, resp)
+        self.assertIn("project_names", resp)
 
     def test_cloud_status_availability(self):
         code, resp = self.get("/api/v1/cloud_status/availability/")
         self.assertEqual(200, code)
-        self.assertEqual({"result": {"cloud_status": "availability"}}, resp)
+        self.assertIn("project_names", resp)
 
     def test_not_found(self):
         code, resp = self.get("/unexisting/path/to/somewhere/else")
