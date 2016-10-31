@@ -13,6 +13,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import json
+
 import mock
 import testtools
 
@@ -25,6 +27,9 @@ class TestCase(testtools.TestCase):
         super(TestCase, self).setUp()
         self.addCleanup(mock.patch.stopall)
 
-        main.load_config()
         main.app.config["TESTING"] = True
         self.app = main.app.test_client()
+
+    def get(self, *args, **kwargs):
+        rv = self.app.get(*args, **kwargs)
+        return rv.status_code, json.loads(rv.data.decode())

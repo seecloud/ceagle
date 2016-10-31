@@ -16,36 +16,17 @@
 import flask
 
 
-infra = flask.Blueprint("infra", __name__,
-                        template_folder="templates")
+infra = flask.Blueprint("infra", __name__)
 
 
 @infra.route("/")
 def index():
-    return flask.render_template(
-        "infrastructure.html",
-        menu="infra",
-        active_page=None,
-        pages=flask.current_app.config["infra"]["pages"])
+    return flask.jsonify({"result": {"infrastructure": "dummy"}})
 
 
 @infra.route("/<page>")
 def remote_page(page):
-
-    active_page = None
-
-    for p in flask.current_app.config["infra"]["pages"]:
-        if p["menu"] == page:
-            active_page = p
-
-    if not active_page:
-        flask.abort(404)
-
-    return flask.render_template(
-        "infrastructure.html",
-        menu="infra",
-        active_page=active_page,
-        pages=flask.current_app.config["infra"]["pages"])
+    return flask.jsonify({"result": {"infrastructure": page}})
 
 
 def get_blueprints():
