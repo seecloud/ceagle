@@ -16,7 +16,7 @@
 import mock
 
 from ceagle import config
-from tests.unit import test
+from tests.unit import test  # noqa
 
 
 class ConfigTestCase(test.TestCase):
