@@ -13,10 +13,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import json
-import logging
-import os
-
 import flask
 from flask_helpers import routing
 
@@ -26,16 +22,11 @@ from ceagle.api.v1 import infrastructure
 from ceagle.api.v1 import intelligence
 from ceagle.api.v1 import optimization
 from ceagle.api.v1 import security
+from ceagle import config
 
 
 app = flask.Flask(__name__, static_folder=None)
-config_path = os.environ.get("CEAGLE_CONF", "etc/ceagle/config.json")
-
-try:
-    config = json.load(open(config_path))
-    app.config.update(config)
-except IOError as e:
-    logging.warning("Config at '%s': %s" % (config_path, e))
+app.config.update(config.get_config()["flask"])
 
 
 @app.errorhandler(404)
@@ -53,8 +44,7 @@ app = routing.add_routing_map(app, html_uri=None, json_uri="/api/v1")
 
 
 def main():
-    app.run(host=app.config.get("HOST", "0.0.0.0"),
-            port=app.config.get("PORT", 5000))
+    app.run()
 
 
 if __name__ == "__main__":
