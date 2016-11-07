@@ -13,7 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from tests.unit import test
+from tests.unit import test  # noqa
 
 
 class AppTestCase(test.TestCase):
@@ -37,3 +37,12 @@ class AppTestCase(test.TestCase):
         code, resp = self.get("/unexisting/path/to/somewhere/else")
         self.assertEqual(404, code)
         self.assertEqual({"error": "Not Found"}, resp)
+
+    def test_api_map(self):
+        code, resp = self.get("/api/v1")
+        self.assertEqual(200, code)
+        part = {
+            "endpoint": "capacity.index",
+            "methods": ["GET", "HEAD", "OPTIONS"],
+            "uri": "/api/v1/capacity/"}
+        self.assertIn(part, resp)
