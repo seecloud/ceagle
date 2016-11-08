@@ -18,6 +18,7 @@ import logging
 import os
 
 import flask
+from flask_helpers import routing  # noqa
 
 from ceagle.api.v1 import capacity
 from ceagle.api.v1 import cloud_status
@@ -46,6 +47,9 @@ for bp in [cloud_status, infrastructure, intelligence, optimization, security,
            capacity]:
     for url_prefix, blueprint in bp.get_blueprints():
         app.register_blueprint(blueprint, url_prefix="/api/v1%s" % url_prefix)
+
+
+app = routing.add_routing_map(app, html_uri=None, json_uri="/api/v1")
 
 
 def main():
