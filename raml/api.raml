@@ -1,0 +1,168 @@
+#%RAML 0.8
+title: Portal API - DRAFT!!!
+version: v1
+mediaType: application/json
+/api/{version}:
+  /capacity/{region}:
+    uriParameters:
+      region:
+        description: Region name
+        type: string
+    get:
+      description: Capacity data for specific region
+      responses:
+        200:
+          body:
+            application/json:
+              schema: schemas/200.json
+              example: !include response_examples/200/capacity.json
+        404:
+          body:
+            application/json:
+              schema: schemas/404.json
+              example: !include response_examples/404/region.json
+  /cloud_status:
+    /{region}:
+      uriParameters:
+        region:
+          description: Region name
+          type: string
+      get:
+        description: Cloud status for specific region
+        responses:
+          200:
+            body:
+              application/json:
+                schema: schemas/200.json
+                example: !include response_examples/200/cloud_status.json
+        404:
+          body:
+            application/json:
+              schema: schemas/404.json
+              example: !include response_examples/404/region.json
+    /health/{region}:
+      uriParameters:
+        region:
+          description: Region name
+          type: string
+      get:
+        description: Health data for specific region
+        responses:
+          200:
+            body:
+              application/json:
+                schema: schemas/200.json
+                example: !include response_examples/200/cloud_status_health.json
+        404:
+          body:
+            application/json:
+              schema: schemas/404.json
+              example: !include response_examples/404/region.json
+    /availability/{region}:
+      uriParameters:
+        region:
+          description: Region name
+          type: string
+      get:
+        description: Availability data for specific region
+        responses:
+          200:
+            body:
+              application/json:
+                schema: schemas/200.json
+                example: !include response_examples/200/availability.json
+        404:
+          body:
+            application/json:
+              schema: schemas/404.json
+              example: !include response_examples/404/region.json
+    /performance/{region}:
+      uriParameters:
+        region:
+          description: Region name
+          type: string
+      get:
+        description: Availability data for specific region
+        responses:
+          200:
+            body:
+              application/json:
+                schema: schemas/200.json
+                example: !include response_examples/200/availability.json
+        404:
+          body:
+            application/json:
+              schema: schemas/404.json
+              example: !include response_examples/404/region.json
+  /infra/{region}:
+    uriParameters:
+      region:
+        description: Region name
+        type: string
+    get:
+      description: Infrastructure info for specific region
+      responses:
+        200:
+          body:
+            application/json:
+              schema: schemas/200.json
+              example: !include response_examples/200/infra.json
+        404:
+          body:
+            application/json:
+              schema: schemas/404.json
+              example: !include response_examples/404/region.json
+  /cis/{region}:
+    uriParameters:
+      region:
+        description: Region name
+        type: string
+    get:
+      description: Cloud Intelligense System
+      responses:
+        200:
+          body:
+            application/json:
+              schema: schemas/200.json
+              example: !include response_examples/200/cis.json
+        404:
+          body:
+            application/json:
+              schema: schemas/404.json
+              example: !include response_examples/404/region.json
+  /optimization/{region}:
+    uriParameters:
+      region:
+        description: Region name
+        type: string
+    get:
+      description: Optimization data
+      responses:
+        200:
+          body:
+            application/json:
+              schema: schemas/200.json
+              example: !include response_examples/200/optimization.json
+        404:
+          body:
+            application/json:
+              schema: schemas/404.json
+              example: !include response_examples/404/region.json
+  /security/{region}:
+    uriParameters:
+      region:
+        description: Region name
+        type: string
+    get:
+      description: Security data
+      responses:
+        200:
+          body:
+            application/json:
+              schema: schemas/200.json
+              example: !include response_examples/200/security.json
+        404:
+          body:
+            application/json:
+              schema: schemas/404.json
+              example: !include response_examples/404/region.json
