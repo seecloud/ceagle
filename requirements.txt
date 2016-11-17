@@ -1,5 +1,5 @@
 gunicorn==19.6.0
 Flask==0.11.1
 Flask-SQLAlchemy==2.1
-requests
--e git://github.com/seecloud/flask-helpers.git#egg=flask_helpers
+requests==2.11.1
+flask-helpers==0.1
