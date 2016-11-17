@@ -18,7 +18,7 @@ import logging
 import os
 
 import flask
-from flask_helpers import routing  # noqa
+from flask_helpers import routing
 
 from ceagle.api.v1 import capacity
 from ceagle.api.v1 import cloud_status
@@ -28,7 +28,7 @@ from ceagle.api.v1 import optimization
 from ceagle.api.v1 import security
 
 
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_folder=None)
 config_path = os.environ.get("CEAGLE_CONF", "etc/ceagle/config.json")
 
 try:

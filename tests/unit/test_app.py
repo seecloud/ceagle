@@ -13,7 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from tests.unit import test  # noqa
+from tests.unit import test
 
 
 class AppTestCase(test.TestCase):
