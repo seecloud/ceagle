@@ -2,6 +2,9 @@ language: python
 
 install:
   - pip install tox
+  
+before_install:  
+- 
 
 env:
    - TOXENV=pep8
@@ -20,3 +23,10 @@ matrix:
         - pip install coveralls
       env: TOXENV=cover
       after_success: coveralls
+      
+    - node_js: "6"
+      install:
+        - npm install abao
+      script:
+        - abao raml/api.raml
+      
