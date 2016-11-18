@@ -1,0 +1,10 @@
+{
+  "regions": {
+    "west-1.hooli.net": {
+        "services": ["health", "performance", "cis"]
+    },
+    "east-2.piedpiper.net": {
+        "services": ["availability", "performance", "cis", "security"]
+    }
+  }
+}

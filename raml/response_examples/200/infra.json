@@ -1,5 +1,18 @@
 {
-  "result": [
-    "FIXME!"
+  "region": "west-1.hooli.net",
+
+  "services": [
+    {
+        "menu": "Jenkins",
+        "title": "Jenkins CI/CD system",
+        "description": "Some description about this service",
+        "url": "https://1.2.3.4:12345"
+    },
+    {
+        "menu": "Stacklight",
+        "title": "Logging, Metering and Alerting systems",
+        "description": "Some description about this service",
+        "url": "https://1.2.3.4:12345"
+    }
   ]
 }
