@@ -8,7 +8,6 @@ env:
    - TOXENV=py27
    - TOXENV=py33
    - TOXENV=py34
-   - TOXENV=raml
 
 script:
   - tox
@@ -23,8 +22,5 @@ matrix:
       after_success: coveralls
       
     - node_js: "6"
-      install:
-        - npm install abao
-      script:
-        - abao raml/api.raml
-      
+      env:
+        - TOXENV=raml      
