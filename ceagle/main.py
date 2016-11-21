@@ -17,11 +17,12 @@ import flask
 from flask_helpers import routing
 
 from ceagle.api.v1 import capacity
-from ceagle.api.v1 import cloud_status
 from ceagle.api.v1 import infrastructure
 from ceagle.api.v1 import intelligence
 from ceagle.api.v1 import optimization
+from ceagle.api.v1 import regions
 from ceagle.api.v1 import security
+from ceagle.api.v1 import status
 from ceagle import config
 
 
@@ -29,18 +30,23 @@ app = flask.Flask(__name__, static_folder=None)
 app.config.update(config.get_config()["flask"])
 
 
+@app.route("/api/")
+def versions():
+    return flask.jsonify({"versions": ["1.0"]})
+
+
 @app.errorhandler(404)
 def not_found(error):
     return flask.jsonify({"error": "Not Found"}), 404
 
 
-for bp in [cloud_status, infrastructure, intelligence, optimization, security,
-           capacity]:
+for bp in [status, infrastructure, intelligence, optimization, security,
+           regions, capacity]:
     for url_prefix, blueprint in bp.get_blueprints():
         app.register_blueprint(blueprint, url_prefix="/api/v1%s" % url_prefix)
 
 
-app = routing.add_routing_map(app, html_uri=None, json_uri="/api/v1")
+app = routing.add_routing_map(app, html_uri=None, json_uri="/")
 
 
 def main():

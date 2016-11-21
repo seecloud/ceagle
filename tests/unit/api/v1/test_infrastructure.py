@@ -13,19 +13,17 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import flask
-
-from ceagle.api_fake_data import fake_infra
+from tests.unit import test
 
 
-bp_region = flask.Blueprint("infra", __name__)
+class ApiTestCase(test.TestCase):
 
+    def test_api_response_code(self):
+        region = "north-2.piedpiper.net"
+        urlpath = "/api/v1/region/%s/infra" % region
+        code, resp = self.get(urlpath)
+        self.assertEqual(code, 200, urlpath)
 
-@bp_region.route("/<region>/infra")
-@fake_infra.get_region_infra
-def get_region_infra(region):
-    return flask.jsonify("fixme!")
-
-
-def get_blueprints():
-    return [["/region", bp_region]]
+        urlpath = "/api/v1/region/unexpected_region/infra"
+        code, resp = self.get(urlpath)
+        self.assertEqual(404, code, urlpath)

@@ -13,25 +13,18 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import mock
+
+from ceagle import main
 from tests.unit import test
 
 
 class AppTestCase(test.TestCase):
 
-    def test_cloud_status(self):
-        code, resp = self.get("/api/v1/cloud_status/")
+    def test_versions(self):
+        code, resp = self.get("/api/")
         self.assertEqual(200, code)
-        self.assertIn("regions", resp)
-
-    def test_cloud_status_health(self):
-        code, resp = self.get("/api/v1/cloud_status/health/")
-        self.assertEqual(200, code)
-        self.assertIn("project_names", resp)
-
-    def test_cloud_status_availability(self):
-        code, resp = self.get("/api/v1/cloud_status/availability/")
-        self.assertEqual(200, code)
-        self.assertIn("project_names", resp)
+        self.assertEqual({"versions": ["1.0"]}, resp)
 
     def test_not_found(self):
         code, resp = self.get("/unexisting/path/to/somewhere/else")
@@ -39,9 +32,15 @@ class AppTestCase(test.TestCase):
         self.assertEqual({"error": "Not Found"}, resp)
 
     def test_api_map(self):
-        code, resp = self.get("/api/v1")
+        code, resp = self.get("/")
         self.assertEqual(200, code)
         part = {"endpoint": "capacity.index",
                 "methods": ["GET", "HEAD", "OPTIONS"],
                 "uri": "/api/v1/capacity/"}
         self.assertIn(part, resp)
+
+    @mock.patch("ceagle.main.app")
+    def test_main(self, mock_app):
+        self.assertFalse(mock_app.run.called)
+        main.main()
+        mock_app.run.assert_called_once_with()
