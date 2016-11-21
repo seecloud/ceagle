@@ -15,6 +15,10 @@
 
 import random
 
+import flask
+
+from ceagle.api_fake_data import base
+
 
 def _gen_values(mode):
     if mode == 1:
@@ -69,8 +73,9 @@ def health_projects():
     }
 
 
+@base.api_handler
 def overview_data():
-    return {
+    return flask.jsonify({
         "region_names": ["west-1.hooli.net",
                          "west-2.hooli.net",
                          "south-1.hooli.net"],
@@ -88,7 +93,7 @@ def overview_data():
                 "availability": 0.95
             }
         }
-    }
+    })
 
 
 def availability_data():
