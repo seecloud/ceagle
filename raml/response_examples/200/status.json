@@ -1,0 +1,18 @@
+{
+    "period": "week",
+
+    "regions": {
+        "west-1.hooli.net": {
+            "sla": 0.9,
+            "availability": 0.9,
+            "health": 0.9,
+            "performance": 100
+        },
+        "west-2.hooli.net": {
+            "sla": 0.9,
+            "availability": 0.9,
+            "health": 0.9,
+            "performance": 200
+        }
+    }
+}
