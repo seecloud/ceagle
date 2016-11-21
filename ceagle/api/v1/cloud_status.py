@@ -34,8 +34,9 @@ def get_blueprints():
 
 
 @overview.route("/")
+@cloud_status_data.overview_data
 def get_status():
-    return flask.jsonify(cloud_status_data.overview_data())
+    return flask.jsonify("fixme!")
 
 
 @health.route("/", defaults={"region": "all"})
