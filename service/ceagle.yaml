@@ -1,0 +1,29 @@
+dsl_version: 0.1.0
+service:
+  name: ceagle
+  ports:
+    - {{ ceagle.port }}
+  containers:
+    - name: ceagle
+      image: ceagle
+      probes:
+        readiness:
+          type: "httpGet"
+          port: {{ ceagle.port.cont }}
+          path: "/"
+        liveness:
+          command: "true"
+          type: "exec"
+      daemon:
+        command: gunicorn
+                 --name ceagle
+                 --workers {{ ceagle.wsgi.workers }}
+                 --bind 0.0.0.0:{{ ceagle.port.cont }}
+                 ceagle.main:app
+        files:
+          - ceagle.conf
+
+files:
+  ceagle.conf:
+    path: /etc/ceagle/config.json
+    content: ceagle.json.j2

@@ -1,0 +1,7 @@
+FROM {{ image_spec("base-tools") }}
+MAINTAINER {{ maintainer }}
+
+{{ copy_sources("seecloud/ceagle", "/ceagle") }}
+
+COPY PKG-INFO /ceagle/
+RUN pip install --upgrade /ceagle
