@@ -1,0 +1,14 @@
+configs:
+  ceagle:
+    debug: true
+
+    port:
+      cont: 5000
+
+    wsgi:
+      workers: 4
+
+sources:
+  seecloud/ceagle:
+    git_url: https://github.com/seecloud/ceagle
+    git_ref: master

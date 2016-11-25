@@ -1,0 +1,7 @@
+{
+    "flask": {
+        "PORT": {{ ceagle.port.cont }},
+        "HOST": "0.0.0.0",
+        "DEBUG": {% if ceagle.debug %}true{% else %}false{% endif %}
+    }
+}
