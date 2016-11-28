@@ -29,7 +29,7 @@ class ConfigTestCase(test.TestCase):
             for m in (mock_open, mock_environ, mock_json):
                 m.reset_mock()
 
-        config.config = None
+        config.CONF = None
         mock_json.load.return_value = {"foo": 42, "bar": "spam"}
         mock_environ.get.return_value = "foo_path"
         mock_open.return_value = "foo_stream"
@@ -42,7 +42,7 @@ class ConfigTestCase(test.TestCase):
         mock_json.load.assert_called_once_with("foo_stream")
 
         reset_mocks()
-        config.config = None
+        config.CONF = None
         mock_open.side_effect = IOError
         cfg = config.get_config()
         self.assertEqual(
@@ -50,5 +50,5 @@ class ConfigTestCase(test.TestCase):
             cfg)
 
     def test_get_config_cached(self):
-        config.config = 42
+        config.CONF = 42
         self.assertEqual(42, config.get_config())

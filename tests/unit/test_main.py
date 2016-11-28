@@ -43,4 +43,4 @@ class AppTestCase(test.TestCase):
     def test_main(self, mock_app):
         self.assertFalse(mock_app.run.called)
         main.main()
-        mock_app.run.assert_called_once_with()
+        mock_app.run.assert_called_once_with(host="0.0.0.0", port=5000)

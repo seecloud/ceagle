@@ -18,7 +18,14 @@ import logging
 import os
 
 
-config = None
+CONF = None
+DEFAULT_CONF = {
+    "flask": {
+        "HOST": "0.0.0.0",
+        "PORT": 5000,
+        "DEBUG": False
+    }
+}
 
 
 def get_config():
@@ -27,19 +34,13 @@ def get_config():
     :returns: application config
     :rtype: dict
     """
-    global config
-    if not config:
+    global CONF
+    if not CONF:
         path = os.environ.get("CEAGLE_CONF", "/etc/ceagle/config.json")
         try:
-            config = json.load(open(path))
+            CONF = json.load(open(path))
             logging.info("Config is '%s'" % path)
         except IOError as e:
             logging.warning("Config at '%s': %s" % (path, e))
-            config = {
-                "flask": {
-                    "HOST": "0.0.0.0",
-                    "PORT": 5000,
-                    "DEBUG": False
-                }
-            }
-    return config
+            CONF = DEFAULT_CONF
+    return CONF
