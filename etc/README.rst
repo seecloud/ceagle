@@ -32,12 +32,9 @@ Here is a simple example with configuration for Flask and two microservices:
         "HOST": "0.0.0.0",
         "DEBUG": true
     },
-    "cloud_status": {
-        "endpoint": "http://dummy.example.org/api/cloud_status"
-    },
-    "capacity": {
-        "endpoint": "http://dummy.example.org/api/capacity"
-    }
+    "availability": "http://availability",
+    "health": "http://health",
+    "performance": "http://performance"
   }
 
 Flask configuration
