@@ -13,6 +13,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import functools
 import random
 
 from ceagle import config
@@ -23,7 +24,22 @@ PERIODS = {"day": 1, "week": 7, "month": 30}
 
 
 def api_handler(fake):
-    return lambda real: USE_FAKE_DATA and fake or real
+    """Function that handles api_fake_data substitution functions
+
+    It is intended to be used as a decorator around fake api functions. It
+    turns a function it decorates into a decorator, that accepts "real" api
+    function (real_function_handler). The resulting decorator returns a
+    (choice_maker) function, that calls real or fake function, depending on the
+    value of USE_FAKE_DATA global variable.
+    """
+    def real_function_handler(real):
+        @functools.wraps(real)
+        def choice_maker(*args, **kwargs):
+            if USE_FAKE_DATA:
+                return fake(*args, **kwargs)
+            return real(*args, **kwargs)
+        return choice_maker
+    return real_function_handler
 
 
 def randnum(from_num, to_num, round_by=2):

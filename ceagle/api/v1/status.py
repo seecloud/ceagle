@@ -32,6 +32,7 @@ def get_status(period):
 
 
 @bp_status.route("/health/<period>")
+@fake_status.get_status_health
 def get_status_health(period):
     health_client = client.get_client("health")
     if not health_client:
@@ -62,6 +63,7 @@ def get_region_status(region, period):
 
 
 @bp_region_status.route("/<region>/status/health/<period>")
+@fake_status.get_region_status_health
 def get_region_status_health(region, period):
     health_client = client.get_client("health")
     if not health_client:
