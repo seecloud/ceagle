@@ -21,10 +21,9 @@ from ceagle import config
 class Client(object):
     """REST client."""
 
-    def __init__(self, name, conf, **kwargs):
+    def __init__(self, name, endpoint):
         self.name = name
-        self.config = conf
-        self.endpoint = conf["endpoint"]
+        self.endpoint = endpoint
 
     def __repr__(self):
         return "<Client '%s'>" % self.name
@@ -59,7 +58,7 @@ def get_client(service_name):
     :param service_name: str name of microservice
     :returns: Client
     """
-    conf = config.get_config().get(service_name)
-    if (conf and conf.get("endpoint")):
-        return Client(name=service_name, conf=conf)
+    endpoint = config.get_config().get(service_name)
+    if endpoint:
+        return Client(name=service_name, endpoint=endpoint)
     return None
