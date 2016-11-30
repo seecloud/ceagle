@@ -3,5 +3,6 @@ MAINTAINER {{ maintainer }}
 
 {{ copy_sources("seecloud/ceagle", "/ceagle") }}
 
+# Unless we do not have tags in repos, PKG-INFO provides temporary version
 COPY PKG-INFO /ceagle/
 RUN pip install --upgrade /ceagle
