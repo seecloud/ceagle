@@ -43,7 +43,7 @@ def generate_service_data(days, service):
         time_data = generate_values(days)[0]
         size_data = generate_values(days, 50)[0]
         return {
-            "fci": random.randint(2000, 5000),
+            "fci": random.randint(0, 100) * 0.01,
             "response_time": base.randnum(.1, 2.5),
             "response_size": random.randint(2000, 5000),
             "api_calls_count": random.randint(200, 500),
