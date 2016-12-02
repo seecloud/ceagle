@@ -58,7 +58,7 @@ def get_client(service_name):
     :param service_name: str name of microservice
     :returns: Client
     """
-    endpoint = config.get_config().get(service_name)
+    endpoint = config.get_config().get("services", {}).get(service_name)
     if endpoint:
         return Client(name=service_name, endpoint=endpoint)
     return None
