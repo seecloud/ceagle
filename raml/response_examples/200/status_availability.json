@@ -1,6 +1,5 @@
 {
     "period": "week",
-
     "availability": {
         "west-1.hooli.net": {
             "availability": 0.9,

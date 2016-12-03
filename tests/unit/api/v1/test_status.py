@@ -19,7 +19,7 @@ from ceagle.api_fake_data import base as fake_api_base
 from tests.unit import test
 
 
-class ApiTestCase(test.TestCase):
+class FakeApiTestCase(test.TestCase):
 
     def test_api_response_code(self):
         region = "north-2.piedpiper.net"
@@ -32,15 +32,18 @@ class ApiTestCase(test.TestCase):
                         "/api/v1/region/%s/status/performance" % region,
                         "/api/v1/region/%s/status/availability" % region):
             for suffix, code in (
-                    ("", 404), ("unexpected", 404),
-                    ("day", 200), ("week", 200), ("month", 200)):
+                    ("", 404), ("unexpected", 404), ("day", 200),
+                    ("week", 200), ("month", 200), ("year", 200)):
                 urlpath_ = "%s/%s" % (urlpath, suffix)
                 code_, resp = self.get(urlpath_)
                 self.assertEqual(code, code_, urlpath_)
 
-        urlpath = "/api/v1/region/unexpected_region/status/day"
-        code, resp = self.get(urlpath)
-        self.assertEqual(404, code, urlpath)
+        for uri in ("unexpected/status/health/day",
+                    "unexpected/status/availability/day",
+                    "west-1.hooli.net/status/availability/day"):
+            uri = "/api/v1/region/" + uri
+            code, resp = self.get(uri)
+            self.assertEqual(404, code)
 
 
 @mock.patch("ceagle.config.get_config")
