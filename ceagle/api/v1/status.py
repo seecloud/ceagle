@@ -53,7 +53,15 @@ def get_status_performance(period):
 @bp_status.route("/availability/<period>")
 @fake_status.get_status_availability
 def get_status_availability(period):
-    return flask.jsonify("fixme!")
+    ct = client.get_client("availability")
+    if not ct:
+        err = {"error": "No availability endpoint configured"}
+        return flask.jsonify(err), 404
+
+    api_endpoint = "/api/v1/availability/{period}".format(period=period)
+    resp = ct.get(api_endpoint)
+    code = resp.pop("status_code")
+    return flask.jsonify(resp), code
 
 
 @bp_region_status.route("/<region>/status/<period>")
@@ -85,7 +93,15 @@ def get_region_status_performance(region, period):
 @bp_region_status.route("/<region>/status/availability/<period>")
 @fake_status.get_region_status_availability
 def get_region_status_availability(region, period):
-    return flask.jsonify("fixme!")
+    ct = client.get_client("availability")
+    if not ct:
+        err = {"error": "No availability endpoint configured"}
+        return flask.jsonify(err), 404
+    api_endpoint = "/api/v1/region/{region}/availability/{period}".format(
+        region=region, period=period)
+    resp = ct.get(api_endpoint)
+    code = resp.pop("status_code")
+    return flask.jsonify(resp), code
 
 
 def get_blueprints():
