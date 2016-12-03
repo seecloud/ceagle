@@ -17,31 +17,73 @@ import datetime
 import random
 
 import flask
-from werkzeug import exceptions
 
 from ceagle.api_fake_data import base
 from ceagle.api_fake_data import fake_regions
 
 
-def generate_values(days, ratio=1):
+def period_is_valid(period):
+    return period in ("day", "week", "month", "year")
+
+
+def generate_timestamps(period):
     today = datetime.date.today()
-    if days == 1:
-        ystday = (today - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
-        stamps = ["%sT%.2i:00" % (ystday, hr) for hr in range(24)]
+    stamps = []
+    if period == "day":
+        day = (today - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        stamps = []
+        for hour in range(24):
+            for minutes in ["00", "10", "20", "30", "40", "50"]:
+                stamps.append("%sT%.2i:%s" % (day, hour, minutes))
+    elif period == "week":
+        days = 7
+        for day in [(today - datetime.timedelta(days=(days - d)))
+                    for d in range(days)]:
+            day = day.strftime("%Y-%m-%d")
+            for hour in range(24):
+                stamps.append("%sT%.2i:00" % (day, hour))
+    elif period == "month":
+        days = 30
+        for day in [(today - datetime.timedelta(days=(days - d)))
+                    for d in range(days)]:
+            day = day.strftime("%Y-%m-%d")
+            for hour in [0, 4, 8, 12, 16, 20]:
+                stamps.append("%sT%.2i:00" % (day, hour))
+    elif period == "year":
+        days = 365
+        for day in [(today - datetime.timedelta(days=(days - d)))
+                    for d in range(days)]:
+            day = day.strftime("%Y-%m-%d")
+            for hour in [0, 8, 16]:
+                stamps.append("%sT%.2i:00" % (day, hour))
+    return stamps
+
+
+def generate_values(period_or_timestamps,
+                    ratio=1, null_result_probability=20):
+    if type(period_or_timestamps) == list:
+        timestamps = period_or_timestamps
     else:
-        stamps = [(today - datetime.timedelta(days=(days - d)))
-                  for d in range(days)]
-        stamps = [s.strftime("%Y-%m-%dT00:00") for s in stamps]
-    data = [[s, base.randnum(.7, 1) * ratio] for s in stamps]
-    avg = round(sum([v[1] for v in data]) / len(data), 3)
-    return (data, avg)
+        timestamps = generate_timestamps(period_or_timestamps)
+    if timestamps:
+        data = []
+        data_avg = []
+        for ts in timestamps:
+            if random.randint(1, 100) <= null_result_probability:
+                data.append([ts, None])
+            else:
+                value = base.randnum(.7, 1) * ratio
+                data.append([ts, value])
+                data_avg.append(value)
+        avg = round(sum(data_avg) / len(data_avg), 3)
+        return (data, avg)
 
 
-def generate_service_data(days, service):
+def generate_service_data(period, service):
     if service == "health":
-        fci_data = generate_values(days)[0]
-        time_data = generate_values(days)[0]
-        size_data = generate_values(days, 50)[0]
+        fci_data = generate_values(period)[0]
+        time_data = generate_values(period)[0]
+        size_data = generate_values(period, 50)[0]
         return {
             "fci": random.randint(0, 100) * 0.01,
             "response_time": base.randnum(.1, 2.5),
@@ -53,20 +95,16 @@ def generate_service_data(days, service):
         }
 
     elif service == "performance":
-        data, avg = generate_values(days)
+        data, avg = generate_values(period)
         return {"data": data, "duration": avg}
 
     elif service == "availability":
-        data, avg = generate_values(days)
-        return {"data": data, "availability": avg}
+        data, avg = generate_values(period)
+        return {"availability_data": data, "availability": avg}
 
 
 def generate_region_data(region, period, service=None):
     data = fake_regions.regions(detailed=True).get(region)
-    days = base.PERIODS.get(period)
-
-    if not days:
-        raise exceptions.NotFound
 
     if not data:
         return ({"error": "Region '%s' not found" % region}, 404)
@@ -77,18 +115,21 @@ def generate_region_data(region, period, service=None):
                      % (service, region))
             return ({"error": error}, 404)
 
-        result = generate_service_data(days, service)
+        result = generate_service_data(period, service)
         return ({service: {region: result}, "period": period}, 200)
 
     result = {"sla": base.randnum(.7, 1)}
     for service in ("availability", "performance", "health"):
         if service in data["services"]:
-            result[service] = generate_service_data(days, service)
+            result[service] = generate_service_data(period, service)
 
     return ({"period": period, "status": {region: result}}, 200)
 
 
 def generate_status_data(period, service=None):
+    if not period_is_valid(period):
+        return flask.jsonify({"error": "Not Found"}), 404
+
     data = {}
     for region in fake_regions.regions():
         result, code = generate_region_data(region, period, service)
@@ -102,6 +143,9 @@ def generate_status_data(period, service=None):
 
 
 def generate_region_data_response(region, period, service=None):
+    if not period_is_valid(period):
+        return flask.jsonify({"error": "Not Found"}), 404
+
     result, code = generate_region_data(region, period, service)
     return (flask.jsonify(result), code)
 
@@ -143,4 +187,25 @@ def get_region_status_performance(region, period):
 
 @base.api_handler
 def get_region_status_availability(region, period):
-    return generate_region_data_response(region, period, "availability")
+    if not period_is_valid(period):
+        return flask.jsonify({"error": "Not Found"}), 404
+
+    region_data = fake_regions.regions(detailed=True).get(region)
+
+    if not region_data:
+        return flask.jsonify({"error": "Region '%s' not found" % region}), 404
+
+    if "availability" not in region_data["services"]:
+            error = ("Service '%s' is not available for region '%s'"
+                     % ("availability", region))
+            return flask.jsonify({"error": error}), 404
+
+    availability = {}
+    for svc in ["foo_service", "bar_service", "spam_service"]:
+        data, avg = generate_values(period)
+        availability[svc] = {"availability_data": data,
+                             "availability": avg}
+
+    return flask.jsonify({"availability": availability,
+                          "region": region,
+                          "period": period})

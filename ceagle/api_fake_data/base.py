@@ -20,7 +20,6 @@ from ceagle import config
 
 
 USE_FAKE_DATA = config.get_config().get("use_fake_api_data", True)
-PERIODS = {"day": 1, "week": 7, "month": 30}
 
 
 def api_handler(fake):
