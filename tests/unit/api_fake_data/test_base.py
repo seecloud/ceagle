@@ -24,10 +24,12 @@ class ModuleTestCase(test.TestCase):
     @mock.patch("ceagle.api_fake_data.base.config")
     def test_api_handler(self, mock_config):
         mock_config.get_config.return_value = {}
-        self.assertEqual("fake", base.api_handler("fake")("real"))
+        fake = lambda: "fake"
+        real = lambda: "real"
+        self.assertEqual("fake", base.api_handler(fake)(real)())
         self.assertEqual(base.USE_FAKE_DATA, True)
         base.USE_FAKE_DATA = False
-        self.assertEqual("real", base.api_handler("fake")("real"))
+        self.assertEqual("real", base.api_handler(fake)(real)())
 
     @mock.patch("ceagle.api_fake_data.base.random")
     def test_randnum(self, mock_random):
