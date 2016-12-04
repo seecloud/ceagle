@@ -89,3 +89,57 @@ class HealthApiTestCase(test.TestCase):
         code, resp = self.get("/api/v1/region/test_region/status/health/day")
         self.assertEqual(404, code)
         self.assertEqual({"error": "No health endpoint configured"}, resp)
+
+
+class AvailabilityApiTestCase(test.TestCase):
+
+    def setUp(self):
+        super(AvailabilityApiTestCase, self).setUp()
+        self.config = {"services": {"availability": "foo_endpoint"}}
+        self.saved_use_fake_api = fake_api_base.USE_FAKE_DATA
+        fake_api_base.USE_FAKE_DATA = False
+
+    def tearDown(self):
+        fake_api_base.USE_FAKE_DATA = self.saved_use_fake_api
+        super(AvailabilityApiTestCase, self).tearDown()
+
+    @mock.patch("ceagle.config.get_config")
+    @mock.patch("ceagle.api.client.Client")
+    def test_get_status_availability(self, mock_client, mock_config):
+        uri = "/api/v1/status/availability/day"
+
+        # Not Found
+        mock_config.return_value = {"services": {}}
+        code, resp = self.get(uri)
+        self.assertEqual(404, code)
+
+        # OK
+        mock_config.return_value = self.config
+        mock_get = mock.Mock(return_value={"data": "nice",
+                                           "status_code": 42})
+        mock_client.return_value.get = mock_get
+        code, resp = self.get(uri)
+        self.assertEqual(42, code)
+        self.assertEqual({"data": "nice"}, resp)
+        mock_get.assert_called_once_with("/api/v1/availability/day")
+
+    @mock.patch("ceagle.config.get_config")
+    @mock.patch("ceagle.api.client.Client")
+    def test_get_region_status_availability(self, mock_client, mock_config):
+        uri = "/api/v1/region/foo_region/status/availability/day"
+
+        # Not Found
+        mock_config.return_value = {"services": {}}
+        code, resp = self.get(uri)
+        self.assertEqual(404, code)
+
+        # OK
+        mock_config.return_value = self.config
+        mock_get = mock.Mock(return_value={"data": "nice",
+                                           "status_code": 42})
+        mock_client.return_value.get = mock_get
+        code, resp = self.get(uri)
+        self.assertEqual(42, code)
+        self.assertEqual({"data": "nice"}, resp)
+        mock_get.assert_called_once_with(
+            "/api/v1/region/foo_region/availability/day")
