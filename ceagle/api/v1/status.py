@@ -13,8 +13,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import json
-
 import flask
 
 from ceagle.api import client
@@ -36,12 +34,13 @@ def get_status(period):
 def get_status_health(period):
     health_client = client.get_client("health")
     if not health_client:
-        return flask.make_response(
-            json.dumps({"error": "No health endpoint configured"}), 404)
+        return (flask.jsonify({"error": "No health endpoint configured"}),
+                404)
 
     api_endpoint = "/api/v1/health/{}".format(period)
+
     result, code = health_client.get(api_endpoint)
-    return flask.make_response(json.dumps(result), code)
+    return flask.jsonify(result), code
 
 
 @bp_status.route("/performance/<period>")
@@ -74,13 +73,15 @@ def get_region_status(region, period):
 def get_region_status_health(region, period):
     health_client = client.get_client("health")
     if not health_client:
-        return flask.make_response(
-            json.dumps({"error": "No health endpoint configured"}), 404)
+        return (flask.jsonify({"error": "No health endpoint configured"}),
+                404)
 
     api_endpoint = "/api/v1/region/{region}/health/{period}".format(
         region=region, period=period)
+
     result, code = health_client.get(api_endpoint)
-    return flask.make_response(json.dumps(result), code)
+    return (flask.jsonify(result),
+            code)
 
 
 @bp_region_status.route("/<region>/status/performance/<period>")
