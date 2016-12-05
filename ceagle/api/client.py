@@ -15,22 +15,20 @@
 
 import requests
 
+from ceagle.api import base
+from ceagle.api_fake_data import fake_security
 from ceagle import config
+
+FAKE_CLIENT_MAP = {
+    "security": fake_security.Client,
+}
 
 
 class UnknownService(Exception):
     pass
 
 
-class Client(object):
-    """REST client."""
-
-    def __init__(self, name, endpoint):
-        self.name = name
-        self.endpoint = endpoint
-
-    def __repr__(self):
-        return "<Client '%s'>" % self.name
+class Client(base.Client):
 
     def get(self, uri="/", **kwargs):
         """Make GET request and decode JSON data.
@@ -55,12 +53,19 @@ class Client(object):
 
 
 def get_client(service_name):
-    """Return client for given service anme, if possible.
+    """Return client for given service name, if possible.
 
     :param service_name: str name of microservice
     :returns: Client
     """
+    if config.get_config().get("use_fake_api_data", True):
+        client_class = FAKE_CLIENT_MAP.get(service_name)
+        if client_class is None:
+            raise NotImplementedError(
+                "Fake client for '%s' is not implemented" % service_name)
+    else:
+        client_class = Client
     endpoint = config.get_config().get("services", {}).get(service_name)
     if endpoint:
-        return Client(name=service_name, endpoint=endpoint)
+        return client_class(name=service_name, endpoint=endpoint)
     raise UnknownService("Unknown service '%s'" % service_name)

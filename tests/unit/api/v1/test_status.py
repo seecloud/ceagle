@@ -81,13 +81,13 @@ class HealthApiTestCase(test.TestCase):
 
     @mock.patch("ceagle.config.get_config")
     def test_health_api_no_endpoint(self, mock_get_config):
-        mock_get_config.return_value = {}
+        mock_get_config.return_value = {"use_fake_api_data": False}
         code, resp = self.get("/api/v1/status/health/day")
-        self.assertEqual(400, code)
+        self.assertEqual(404, code)
         self.assertEqual({"error": "Unknown service 'health'"}, resp)
 
         code, resp = self.get("/api/v1/region/test_region/status/health/day")
-        self.assertEqual(400, code)
+        self.assertEqual(404, code)
         self.assertEqual({"error": "Unknown service 'health'"}, resp)
 
 

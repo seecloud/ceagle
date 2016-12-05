@@ -75,12 +75,15 @@ class ModuleTestCase(test.TestCase):
     @mock.patch("ceagle.api.client.config")
     def test_get_config(self, mock_config):
         self.assertRaises(TypeError, client.get_client)
-        mock_config.get_config.return_value = {"services": {"bar": {}}}
+        mock_config.get_config.return_value = {"use_fake_api_data": False,
+                                               "services": {"bar": {}}}
         self.assertRaises(client.UnknownService, client.get_client, "foo")
-        mock_config.get_config.return_value = {"services": {"foo": ""}}
+        mock_config.get_config.return_value = {"use_fake_api_data": False,
+                                               "services": {"foo": {}}}
         self.assertRaises(client.UnknownService, client.get_client, "foo")
 
-        cfg = {"services": {"foo": "http://foo_ep"}}
+        cfg = {"services": {"foo": "http://foo_ep"},
+               "use_fake_api_data": False}
         mock_config.get_config.return_value = cfg
         ct = client.get_client("foo")
         self.assertIsInstance(ct, client.Client)

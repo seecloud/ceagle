@@ -47,7 +47,7 @@ def not_found(error):
 
 @app.errorhandler(client.UnknownService)
 def handle_unknown_service(ex):
-    return flask.jsonify({"error": str(ex)}), 400
+    return flask.jsonify({"error": str(ex)}), 404
 
 
 for bp in [status, infrastructure, intelligence, optimization, security,
