@@ -41,15 +41,13 @@ class Client(object):
         except requests.exceptions.ConnectionError:
             mesg = "Service '%(name)s' is not available at '%(endpoint)s'" % (
                 {"name": self.name, "endpoint": self.endpoint})
-            return {"status_code": 502,
-                    "error": {"message": mesg}}
+            return {"error": {"message": mesg}}, 502
         try:
             result = response.json()
         except ValueError:
-            return {"status_code": 500,
-                    "error": {"message": "Response can not be decoded"}}
-        result.setdefault("status_code", response.status_code)
-        return result
+            return {"error": {"message": "Response can not be decoded"}}, 500
+
+        return result, response.status_code
 
 
 def get_client(service_name):

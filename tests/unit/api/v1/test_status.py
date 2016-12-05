@@ -64,21 +64,23 @@ class HealthApiTestCase(test.TestCase):
     @mock.patch("ceagle.api.client.Client")
     def test_status_health_api(self, mock_client, mock_get_config):
         mock_get_config.return_value = self.health_config
-        mock_client.return_value.get.return_value = {"status_code": 200}
+        mock_client.return_value.get.return_value = ({"test": 1}, 200)
         code, resp = self.get("/api/v1/status/health/day")
 
         mock_client.return_value.get.assert_called_with("/api/v1/health/day")
         self.assertEqual(200, code)
+        self.assertEqual({"test": 1}, resp)
 
     @mock.patch("ceagle.api.client.Client")
     def test_region_status_health_api(self, mock_client, mock_get_config):
         mock_get_config.return_value = self.health_config
-        mock_client.return_value.get.return_value = {"status_code": 200}
+        mock_client.return_value.get.return_value = ({"test": 2}, 200)
 
         code, resp = self.get("/api/v1/region/test_region/status/health/day")
         mock_client.return_value.get.assert_called_with(
             "/api/v1/region/test_region/health/day")
         self.assertEqual(200, code)
+        self.assertEqual({"test": 2}, resp)
 
     def test_health_api_no_endpoint(self, mock_get_config):
         mock_get_config.return_value = {}
@@ -115,8 +117,7 @@ class AvailabilityApiTestCase(test.TestCase):
 
         # OK
         mock_config.return_value = self.config
-        mock_get = mock.Mock(return_value={"data": "nice",
-                                           "status_code": 42})
+        mock_get = mock.Mock(return_value=({"data": "nice"}, 42))
         mock_client.return_value.get = mock_get
         code, resp = self.get(uri)
         self.assertEqual(42, code)
@@ -135,8 +136,7 @@ class AvailabilityApiTestCase(test.TestCase):
 
         # OK
         mock_config.return_value = self.config
-        mock_get = mock.Mock(return_value={"data": "nice",
-                                           "status_code": 42})
+        mock_get = mock.Mock(return_value=({"data": "nice"}, 42))
         mock_client.return_value.get = mock_get
         code, resp = self.get(uri)
         self.assertEqual(42, code)

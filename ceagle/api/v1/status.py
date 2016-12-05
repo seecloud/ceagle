@@ -40,8 +40,8 @@ def get_status_health(period):
             json.dumps({"error": "No health endpoint configured"}), 404)
 
     api_endpoint = "/api/v1/health/{}".format(period)
-    result = health_client.get(api_endpoint)
-    return flask.make_response(json.dumps(result), result["status_code"])
+    result, code = health_client.get(api_endpoint)
+    return flask.make_response(json.dumps(result), code)
 
 
 @bp_status.route("/performance/<period>")
@@ -59,8 +59,7 @@ def get_status_availability(period):
         return flask.jsonify(err), 404
 
     api_endpoint = "/api/v1/availability/{period}".format(period=period)
-    resp = ct.get(api_endpoint)
-    code = resp.pop("status_code")
+    resp, code = ct.get(api_endpoint)
     return flask.jsonify(resp), code
 
 
@@ -80,8 +79,8 @@ def get_region_status_health(region, period):
 
     api_endpoint = "/api/v1/region/{region}/health/{period}".format(
         region=region, period=period)
-    result = health_client.get(api_endpoint)
-    return flask.make_response(json.dumps(result), result["status_code"])
+    result, code = health_client.get(api_endpoint)
+    return flask.make_response(json.dumps(result), code)
 
 
 @bp_region_status.route("/<region>/status/performance/<period>")
@@ -99,8 +98,7 @@ def get_region_status_availability(region, period):
         return flask.jsonify(err), 404
     api_endpoint = "/api/v1/region/{region}/availability/{period}".format(
         region=region, period=period)
-    resp = ct.get(api_endpoint)
-    code = resp.pop("status_code")
+    resp, code = ct.get(api_endpoint)
     return flask.jsonify(resp), code
 
 
