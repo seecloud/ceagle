@@ -18,14 +18,14 @@ import flask
 from ceagle.api_fake_data import fake_infra
 
 
-bp_region = flask.Blueprint("infra", __name__)
+bp = flask.Blueprint("infra", __name__)
 
 
-@bp_region.route("/<region>/infra")
+@bp.route("/<region>/infra")
 @fake_infra.get_region_infra
 def get_region_infra(region):
     return flask.jsonify("fixme!")
 
 
 def get_blueprints():
-    return [["/region", bp_region]]
+    return [["/region", bp]]

@@ -15,17 +15,35 @@
 
 import flask
 
+from ceagle.api import client
 from ceagle.api_fake_data import fake_regions
-
+from ceagle import config
 
 bp = flask.Blueprint("regions", __name__)
 
 
-@bp.route("/", defaults={"detailed": False})
+@bp.route("", defaults={"detailed": False})
 @bp.route("/detailed", defaults={"detailed": True})
 @fake_regions.get_regions
 def get_regions(detailed):
-    return flask.jsonify({"fixme"})
+    regions = {}
+
+    for service_name in config.get_config()["services"].keys():
+        if service_name == "infra":
+            continue   # TODO(boris-42): This should not be checked here.
+        service_client = client.get_client(service_name)
+
+        resp, code = service_client.get("/api/v1/regions")
+        if code != 200:
+            # FIXME ADD LOGS HERE
+            continue
+        for r in resp:
+            regions.setdefault(r, {"services": []})
+            regions[r]["services"].append(service_name)
+
+    if not detailed:
+        return flask.jsonify({"regions": list(regions.keys())})
+    return flask.jsonify({"regions": regions})
 
 
 def get_blueprints():
