@@ -17,16 +17,48 @@ import flask
 
 from ceagle.api import client
 from ceagle.api_fake_data import fake_status
+from ceagle import config
 
 
 bp_status = flask.Blueprint("status", __name__)
 bp_region_status = flask.Blueprint("region", __name__)
 
 
+def get_status_helper(period, region=None):
+    result = {}
+    key_map = {
+        "health": {"key": "health", "arg": "fci"},
+        "availability": {"key": "availability", "arg": "availability"}
+    }
+
+    for service_name in ["health", "availability"]:
+        if service_name not in config.get_config()["services"]:
+            continue
+
+        service_client = client.get_client(service_name)
+
+        if region:
+            uri = "/api/v1/region/%s/%s/%s" % (region, service_name, period)
+        else:
+            uri = "/api/v1/%s/%s" % (service_name, period)
+
+        resp, code = service_client.get(uri)
+        if code != 200:
+            # FIXME ADD LOGS HERE
+            continue
+
+        for r, value in resp[key_map[service_name]["key"]].items():
+            result.setdefault(r, {"sla": None, "availability": None,
+                                  "health": None, "performance": None})
+
+            result[r][service_name] = value[key_map[service_name]["arg"]]
+    return result
+
+
 @bp_status.route("/<period>")
 @fake_status.get_status
 def get_status(period):
-    return flask.jsonify("fixme!")
+    return flask.jsonify(get_status_helper(period))
 
 
 @bp_status.route("/health/<period>")
@@ -65,7 +97,7 @@ def get_status_availability(period):
 @bp_region_status.route("/<region>/status/<period>")
 @fake_status.get_region_status
 def get_region_status(region, period):
-    return flask.jsonify("fixme!")
+    return flask.jsonify(get_status_helper(period, region=region))
 
 
 @bp_region_status.route("/<region>/status/health/<period>")
