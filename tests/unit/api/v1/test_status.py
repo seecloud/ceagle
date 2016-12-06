@@ -182,10 +182,15 @@ class StatusApiTestCase(test.TestCase):
             "/api/v1/health/day")
         mock_avail_client.get.assert_called_once_with(
             "/api/v1/availability/day")
-        expected = {"bar": {"availability": 24, "health": None,
-                            "performance": None, "sla": None},
-                    "foo": {"availability": None, "health": 42,
-                            "performance": None, "sla": None}}
+        expected = {
+            "period": "day",
+            "status": {
+                "bar": {"availability": 24, "health": None,
+                        "performance": None, "sla": None},
+                "foo": {"availability": None, "health": 42,
+                        "performance": None, "sla": None}
+            }
+        }
         self.assertEqual(expected, resp)
 
     @mock.patch("ceagle.api.v1.status.config.get_config")
@@ -209,8 +214,13 @@ class StatusApiTestCase(test.TestCase):
             "/api/v1/region/foo_region/health/day")
         mock_avail_client.get.assert_called_once_with(
             "/api/v1/region/foo_region/availability/day")
-        expected = {"bar": {"availability": 24, "health": None,
-                            "performance": None, "sla": None},
-                    "foo": {"availability": None, "health": 42,
-                            "performance": None, "sla": None}}
+        expected = {
+            "period": "day",
+            "status": {
+                "bar": {"availability": 24, "health": None,
+                        "performance": None, "sla": None},
+                "foo": {"availability": None, "health": 42,
+                        "performance": None, "sla": None}
+            }
+        }
         self.assertEqual(expected, resp)
