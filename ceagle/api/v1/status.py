@@ -52,7 +52,7 @@ def get_status_helper(period, region=None):
                                   "health": None, "performance": None})
 
             result[r][service_name] = value[key_map[service_name]["arg"]]
-    return result
+    return {"period": period, "status": result}
 
 
 @bp_status.route("/<period>")
