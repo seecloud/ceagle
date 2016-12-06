@@ -146,3 +146,71 @@ class AvailabilityApiTestCase(test.TestCase):
         self.assertEqual({"data": "nice"}, resp)
         mock_get.assert_called_once_with(
             "/api/v1/region/foo_region/availability/day")
+
+
+class StatusApiTestCase(test.TestCase):
+
+    def setUp(self):
+        super(StatusApiTestCase, self).setUp()
+        self.config = {"services": {"availability": "foo_endpoint",
+                                    "health": "bar_endpoint"}}
+        self.saved_use_fake_api = fake_api_base.USE_FAKE_DATA
+        fake_api_base.USE_FAKE_DATA = False
+
+    def tearDown(self):
+        fake_api_base.USE_FAKE_DATA = self.saved_use_fake_api
+        super(StatusApiTestCase, self).tearDown()
+
+    @mock.patch("ceagle.api.v1.status.config.get_config")
+    @mock.patch("ceagle.api.v1.status.client.get_client")
+    def test_get_status(self, mock_client, mock_config):
+        mock_config.return_value = self.config
+
+        health_resp = {"health": {"foo": {"fci": 42}}}
+        mock_health_client = mock.Mock()
+        mock_health_client.get.return_value = (health_resp, 200)
+
+        avail_resp = {"availability": {"bar": {"availability": 24}}}
+        mock_avail_client = mock.Mock()
+        mock_avail_client.get.return_value = (avail_resp, 200)
+        mock_client.side_effect = [mock_health_client, mock_avail_client]
+
+        uri = "/api/v1/status/day"
+        code, resp = self.get(uri)
+        self.assertEqual(200, code)
+        mock_health_client.get.assert_called_once_with(
+            "/api/v1/health/day")
+        mock_avail_client.get.assert_called_once_with(
+            "/api/v1/availability/day")
+        expected = {"bar": {"availability": 24, "health": None,
+                            "performance": None, "sla": None},
+                    "foo": {"availability": None, "health": 42,
+                            "performance": None, "sla": None}}
+        self.assertEqual(expected, resp)
+
+    @mock.patch("ceagle.api.v1.status.config.get_config")
+    @mock.patch("ceagle.api.v1.status.client.get_client")
+    def test_get_region_status(self, mock_client, mock_config):
+        mock_config.return_value = self.config
+
+        health_resp = {"health": {"foo": {"fci": 42}}}
+        mock_health_client = mock.Mock()
+        mock_health_client.get.return_value = (health_resp, 200)
+
+        avail_resp = {"availability": {"bar": {"availability": 24}}}
+        mock_avail_client = mock.Mock()
+        mock_avail_client.get.return_value = (avail_resp, 200)
+        mock_client.side_effect = [mock_health_client, mock_avail_client]
+
+        uri = "/api/v1/region/foo_region/status/day"
+        code, resp = self.get(uri)
+        self.assertEqual(200, code)
+        mock_health_client.get.assert_called_once_with(
+            "/api/v1/region/foo_region/health/day")
+        mock_avail_client.get.assert_called_once_with(
+            "/api/v1/region/foo_region/availability/day")
+        expected = {"bar": {"availability": 24, "health": None,
+                            "performance": None, "sla": None},
+                    "foo": {"availability": None, "health": 42,
+                            "performance": None, "sla": None}}
+        self.assertEqual(expected, resp)
