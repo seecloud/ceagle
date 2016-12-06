@@ -126,7 +126,7 @@ def generate_region_data(region, period, service=None):
     return ({"period": period, "status": {region: result}}, 200)
 
 
-def generate_status_data(period, service=None):
+def generate_status_data(period, service):
     if not period_is_valid(period):
         return flask.jsonify({"error": "Not Found"}), 404
 
@@ -134,11 +134,7 @@ def generate_status_data(period, service=None):
     for region in fake_regions.regions():
         result, code = generate_region_data(region, period, service)
         if code == 200:
-            if service:
-                data.update(result[service])
-            else:
-                data.update(result["status"])
-    service = service or "status"
+            data.update(result[service])
     return flask.jsonify({"period": period, service: data})
 
 
@@ -152,7 +148,18 @@ def generate_region_data_response(region, period, service=None):
 
 @base.api_handler
 def get_status(period):
-    return generate_status_data(period)
+    if not period_is_valid(period):
+        flask.abort(404)
+    status = {}
+    rand = random.random
+    for region in fake_regions.regions():
+        status[region] = {
+            "sla": rand() if rand() > 0.4 else None,
+            "performance": random.randint(1, 10),
+            "availability": rand() if rand() > 0.4 else None,
+            "health": rand() if rand() > 0.4 else None
+        }
+    return flask.jsonify({"status": status, "period": period})
 
 
 @base.api_handler
@@ -172,7 +179,23 @@ def get_status_availability(period):
 
 @base.api_handler
 def get_region_status(region, period):
-    return generate_region_data_response(region, period)
+    if not period_is_valid(period):
+        flask.abort(404)
+
+    data = fake_regions.regions(detailed=True).get(region)
+    if not data:
+        return ({"error": "Region '%s' not found" % region}, 404)
+
+    status = {}
+    rand = random.random
+    for service in ("keystone", "nova", "cinder"):
+        status[service] = {
+            "sla": rand() if rand() > 0.4 else None,
+            "performance": random.randint(1, 10),
+            "availability": rand() if rand() > 0.4 else None,
+            "health": rand() if rand() > 0.4 else None
+        }
+    return flask.jsonify({"status": status, "period": period})
 
 
 @base.api_handler
