@@ -60,7 +60,7 @@ def generate_timestamps(period):
 
 
 def generate_values(period_or_timestamps,
-                    ratio=1, null_result_probability=20):
+                    ratio=1, null_result_probability=20, integer=False):
     if type(period_or_timestamps) == list:
         timestamps = period_or_timestamps
     else:
@@ -72,7 +72,10 @@ def generate_values(period_or_timestamps,
             if random.randint(1, 100) <= null_result_probability:
                 data.append([ts, None])
             else:
-                value = base.randnum(.7, 1) * ratio
+                if not integer:
+                    value = base.randnum(.7, 1) * ratio
+                else:
+                    value = random.randint(1, 1000)
                 data.append([ts, value])
                 data_avg.append(value)
         avg = round(sum(data_avg) / len(data_avg), 3)
@@ -83,7 +86,8 @@ def generate_service_data(period, service):
     if service == "health":
         fci_data = generate_values(period)[0]
         time_data = generate_values(period)[0]
-        size_data = generate_values(period, 50)[0]
+        size_data = generate_values(period, 50, integer=True)[0]
+        count_data = generate_values(period, 50, integer=True)[0]
         return {
             "fci": random.randint(0, 100) * 0.01,
             "response_time": base.randnum(.1, 2.5),
@@ -91,7 +95,8 @@ def generate_service_data(period, service):
             "api_calls_count": random.randint(200, 500),
             "fci_data": fci_data,
             "response_time_data": time_data,
-            "repsonse_size_data": size_data
+            "repsonse_size_data": size_data,
+            "api_calls_count_data": count_data
         }
 
     elif service == "performance":

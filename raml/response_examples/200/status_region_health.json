@@ -2,11 +2,11 @@
     "period": "week",
 
     "health": {
-        "west-1.hooli.net": {
+        "keystone": {
             "fci": 0.9,
             "response_time": 100.43,
             "response_size": 234343,
-            "api_calls_count": 100,
+            "api_calls_count": 5,
             "fci_data": [
                 ["2016-09-16T01:00", 0.9],
                 ["2016-09-16T01:00", 0.7],
