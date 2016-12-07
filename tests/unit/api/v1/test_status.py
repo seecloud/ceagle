@@ -46,7 +46,6 @@ class FakeApiTestCase(test.TestCase):
             self.assertEqual(404, code)
 
 
-@mock.patch("ceagle.config.get_config")
 class HealthApiTestCase(test.TestCase):
 
     def setUp(self):
@@ -64,27 +63,23 @@ class HealthApiTestCase(test.TestCase):
         fake_api_base.USE_FAKE_DATA = self.old_USE_FAKE_DATA
         super(HealthApiTestCase, self).tearDown()
 
-    @mock.patch("ceagle.api.client.Client")
-    def test_status_health_api(self, mock_client, mock_get_config):
-        mock_get_config.return_value = self.health_config
-        mock_client.return_value.get.return_value = ({"test": 1}, 200)
-        code, resp = self.get("/api/v1/status/health/day")
+    @mock.patch("ceagle.api.client.get_client")
+    def test_status_health_api(self, mock_get_client):
+        mock_get_client.return_value.get.return_value = ({"test": 1}, 200)
+        resp = self.get("/api/v1/status/health/day")
+        self.assertEqual((200, {"test": 1}), resp)
+        mock_get_client.return_value.get.assert_called_once_with(
+            "/api/v1/health/day")
 
-        mock_client.return_value.get.assert_called_with("/api/v1/health/day")
-        self.assertEqual(200, code)
-        self.assertEqual({"test": 1}, resp)
-
-    @mock.patch("ceagle.api.client.Client")
-    def test_region_status_health_api(self, mock_client, mock_get_config):
-        mock_get_config.return_value = self.health_config
-        mock_client.return_value.get.return_value = ({"test": 2}, 200)
-
-        code, resp = self.get("/api/v1/region/test_region/status/health/day")
-        mock_client.return_value.get.assert_called_with(
+    @mock.patch("ceagle.api.client.get_client")
+    def test_region_status_health_api(self, mock_get_client):
+        mock_get_client.return_value.get.return_value = ({"test": 2}, 200)
+        resp = self.get("/api/v1/region/test_region/status/health/day")
+        self.assertEqual((200, {"test": 2}), resp)
+        mock_get_client.return_value.get.assert_called_with(
             "/api/v1/region/test_region/health/day")
-        self.assertEqual(200, code)
-        self.assertEqual({"test": 2}, resp)
 
+    @mock.patch("ceagle.config.get_config")
     def test_health_api_no_endpoint(self, mock_get_config):
         mock_get_config.return_value = {}
         code, resp = self.get("/api/v1/status/health/day")
@@ -108,43 +103,20 @@ class AvailabilityApiTestCase(test.TestCase):
         fake_api_base.USE_FAKE_DATA = self.saved_use_fake_api
         super(AvailabilityApiTestCase, self).tearDown()
 
-    @mock.patch("ceagle.config.get_config")
-    @mock.patch("ceagle.api.client.Client")
-    def test_get_status_availability(self, mock_client, mock_config):
-        uri = "/api/v1/status/availability/day"
+    @mock.patch("ceagle.api.client.get_client")
+    def test_get_status_availability(self, mock_get_client):
+        mock_get_client.return_value.get.return_value = ("ok", 42)
+        resp = self.get("/api/v1/status/availability/day")
+        self.assertEqual((42, "ok"), resp)
+        mock_get_client.return_value.get.assert_called_once_with(
+            "/api/v1/availability/day")
 
-        # Not Found
-        mock_config.return_value = {"services": {}}
-        code, resp = self.get(uri)
-        self.assertEqual(404, code)
-
-        # OK
-        mock_config.return_value = self.config
-        mock_get = mock.Mock(return_value=({"data": "nice"}, 42))
-        mock_client.return_value.get = mock_get
-        code, resp = self.get(uri)
-        self.assertEqual(42, code)
-        self.assertEqual({"data": "nice"}, resp)
-        mock_get.assert_called_once_with("/api/v1/availability/day")
-
-    @mock.patch("ceagle.config.get_config")
-    @mock.patch("ceagle.api.client.Client")
-    def test_get_region_status_availability(self, mock_client, mock_config):
-        uri = "/api/v1/region/foo_region/status/availability/day"
-
-        # Not Found
-        mock_config.return_value = {"services": {}}
-        code, resp = self.get(uri)
-        self.assertEqual(404, code)
-
-        # OK
-        mock_config.return_value = self.config
-        mock_get = mock.Mock(return_value=({"data": "nice"}, 42))
-        mock_client.return_value.get = mock_get
-        code, resp = self.get(uri)
-        self.assertEqual(42, code)
-        self.assertEqual({"data": "nice"}, resp)
-        mock_get.assert_called_once_with(
+    @mock.patch("ceagle.api.client.get_client")
+    def test_get_region_status_availability(self, mock_get_client):
+        mock_get_client.return_value.get.return_value = ("ok", 42)
+        resp = self.get("/api/v1/region/foo_region/status/availability/day")
+        self.assertEqual((42, "ok"), resp)
+        mock_get_client.return_value.get.assert_called_once_with(
             "/api/v1/region/foo_region/availability/day")
 
 

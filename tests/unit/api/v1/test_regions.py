@@ -49,10 +49,10 @@ class RegionsApiTestCase(test.TestCase):
         super(RegionsApiTestCase, self).tearDown()
 
     @mock.patch("ceagle.config.get_config")
-    @mock.patch("ceagle.api.client.Client")
-    def test_get_regions(self, mock_client, mock_config):
+    @mock.patch("ceagle.api.client.get_client")
+    def test_get_regions(self, mock_get_client, mock_config):
         mock_config.return_value = self.config
-        mock_client.return_value.get.side_effect = [
+        mock_get_client.return_value.get.side_effect = [
             (["a1", "b1", "c1"], 200),
             (["b1", "d1", "e1"], 200),
             (["a2", "b2", "c2"], 200),
@@ -63,7 +63,7 @@ class RegionsApiTestCase(test.TestCase):
         resp["regions"].sort()
         self.assertEqual({"regions": ["a1", "b1", "c1", "d1", "e1"]}, resp)
 
-        mock_client.get_client.reset_mock()
+        mock_get_client.get_client.reset_mock()
         code, resp = self.get("/api/v1/regions/detailed")
         self.assertEqual(200, code)
         self.assertEqual({
