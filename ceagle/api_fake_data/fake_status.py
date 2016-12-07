@@ -95,7 +95,7 @@ def generate_service_data(period, service):
             "api_calls_count": random.randint(200, 500),
             "fci_data": fci_data,
             "response_time_data": time_data,
-            "repsonse_size_data": size_data,
+            "response_size_data": size_data,
             "api_calls_count_data": count_data
         }
 
