@@ -1,15 +1,17 @@
 #%RAML 0.8
-title: Portal API - DRAFT!!!
+
+title: "Portal API - DRAFT!!!"
 version: v1
 mediaType: application/json
-/api/
+
+/api:
   get:
     description: "List of available versions"
     responses:
       200:
         body:
           application/json:
-            schema: schemas/200.json
+            schema: !include schemas/200.json
             example: !include response_examples/200/versions.json
 
 /api/{version}:
@@ -20,170 +22,170 @@ mediaType: application/json
         200:
           body:
             application/json:
-              schema: schemas/200.json
+              schema: !include schemas/200.json
               example: !include response_examples/200/regions.json
 
   /regions/detailed:
     get:
-      description: Detailed information about regions.
+      description: "Detailed information about regions."
       responses:
         200:
           body:
             application/json:
-              schema: schemas/200.json
+              schema: !include schemas/200.json
               example: !include response_examples/200/regions_detailed.json
 
   /region/{region}:
-    uriParametrs:
+    uriParameters:
       region:
-        description: Region name which is region identifier
+        description: "Region name which is region identifier"
         type: string
 
     /status/{period}:
-      uriParametrs:
+      uriParameters:
         period:
-          description: Return data for specific period: day, week, month
+          description: "Return data for specific period: day, week, month"
           type: string
       get:
-        description: Overview of region's services status
+        description: "Overview of region's services status"
         responses:
           200:
             body:
               application/json:
-                schema: schemas/200.json
+                schema: !include schemas/200.json
                 example: !include response_examples/200/status.json
           404:
             body:
               application/json:
-                schema: schemas/404.json
+                schema: !include schemas/404.json
                 example: !include response_examples/404/region.json
 
     /status/health/{period}:
-      uriParametrs:
+      uriParameters:
         period:
-          description: Return data for specific period: day, week, month
+          description: "Return data for specific period: day, week, month"
           type: string
       get:
-        description: Region health data aggregated per service
+        description: "Region health data aggregated per service"
         responses:
           200:
             body:
               application/json:
-                schema: schemas/200.json
+                schema: !include schemas/200.json
                 example: !include response_examples/200/status_region_health.json
           404:
             body:
               application/json:
-                schema: schemas/404.json
+                schema: !include schemas/404.json
                 example: !include response_examples/404/region.json
 
     /status/availability/{period}:
-      uriParametrs:
+      uriParameters:
         period:
-          description: Return data for specific period: day, week, month
+          description: "Return data for specific period: day, week, month"
           type: string
       get:
-        description: Region availability data aggregated per service
+        description: "Region availability data aggregated per service"
         responses:
           200:
             body:
               application/json:
-                schema: schemas/200.json
+                schema: !include schemas/200.json
                 example: !include response_examples/200/status_region_availability.json
           404:
             body:
               application/json:
-                schema: schemas/404.json
+                schema: !include schemas/404.json
                 example: !include response_examples/404/region.json
 
     /status/performance/{period}:
-      uriParametrs:
+      uriParameters:
         period:
-          description: Return data for specific period: day, week, month
+          description: "Return data for specific period: day, week, month"
           type: string
       get:
-        description: Region performance data aggregated per service
+        description: "Region performance data aggregated per service"
         responses:
           200:
             body:
               application/json:
-                schema: schemas/200.json
+                schema: !include schemas/200.json
                 example: !include response_examples/200/status_region_performance.json
           404:
             body:
               application/json:
-                schema: schemas/404.json
+                schema: !include schemas/404.json
                 example: !include response_examples/404/region.json
 
     /infra:
       get:
-        description: Information about region's infrastructure services
+        description: "Information about region's infrastructure services"
         responses:
           200:
             body:
               application/json:
-                schema: schemas/200.json
+                schema: !include schemas/200.json
                 example: !include response_examples/200/infra.json
           404:
             body:
               application/json:
-                schema: schemas/404.json
+                schema: !include schemas/404.json
                 example: !include response_examples/404/region.json
 
   /status/{period}:
-    uriParametrs:
+    uriParameters:
       period:
-        description: Return data for specific period: day, week, month
+        description: "Return data for specific period: day, week, month"
         type: string
     get:
-      description: Overview data aggregated per region
+      description: "Overview data aggregated per region"
       responses:
         200:
           body:
             application/json:
-              schema: schemas/200.json
+              schema: !include schemas/200.json
               example: !include response_examples/200/status.json
 
   /status/health/{period}:
-    uriParametrs:
+    uriParameters:
       period:
-        description: Return data for specific period: day, week, month
+        description: "Return data for specific period: day, week, month"
         type: string
     get:
-      description: Health data aggregated per region
+      description: "Health data aggregated per region"
       responses:
         200:
           body:
             application/json:
-              schema: schemas/200.json
+              schema: !include schemas/200.json
               example: !include response_examples/200/status_health.json
 
 
   /status/availability/{period}:
-    uriParametrs:
+    uriParameters:
       period:
-        description: Return data for specific period: day, week, month
+        description: "Return data for specific period: day, week, month"
         type: string
     get:
-      description: Availability data aggregated per region
+      description: "Availability data aggregated per region"
       responses:
         200:
           body:
             application/json:
-              schema: schemas/200.json
+              schema: !include schemas/200.json
               example: !include response_examples/200/status_availability.json
 
 
   /status/performance/{period}:
-    uriParametrs:
+    uriParameters:
       period:
-        description: Return data for specific period: day, week, month
+        description: "Return data for specific period: day, week, month"
         type: string
     get:
-      description: Performance data aggregated per region
+      description: "Performance data aggregated per region"
       responses:
         200:
           body:
             application/json:
-              schema: schemas/200.json
+              schema: !include schemas/200.json
               example: !include response_examples/200/status_performance.json
