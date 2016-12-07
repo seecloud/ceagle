@@ -10,9 +10,8 @@ mediaType: application/json
     responses:
       200:
         body:
-          application/json:
-            schema: !include schemas/200.json
-            example: !include response_examples/200/versions.json
+          schema: !include schemas/200.json
+          example: !include response_examples/200/versions.json
 
 /api/{version}:
   /regions:
@@ -21,9 +20,8 @@ mediaType: application/json
       responses:
         200:
           body:
-            application/json:
-              schema: !include schemas/200.json
-              example: !include response_examples/200/regions.json
+            schema: !include schemas/200.json
+            example: !include response_examples/200/regions.json
 
   /regions/detailed:
     get:
@@ -31,9 +29,8 @@ mediaType: application/json
       responses:
         200:
           body:
-            application/json:
-              schema: !include schemas/200.json
-              example: !include response_examples/200/regions_detailed.json
+            schema: !include schemas/200.json
+            example: !include response_examples/200/regions_detailed.json
 
   /region/{region}:
     uriParameters:
@@ -51,14 +48,12 @@ mediaType: application/json
         responses:
           200:
             body:
-              application/json:
-                schema: !include schemas/200.json
-                example: !include response_examples/200/status.json
+              schema: !include schemas/200.json
+              example: !include response_examples/200/status.json
           404:
             body:
-              application/json:
-                schema: !include schemas/404.json
-                example: !include response_examples/404/region.json
+              schema: !include schemas/404.json
+              example: !include response_examples/404/region.json
 
     /status/health/{period}:
       uriParameters:
@@ -70,14 +65,12 @@ mediaType: application/json
         responses:
           200:
             body:
-              application/json:
-                schema: !include schemas/200.json
-                example: !include response_examples/200/status_region_health.json
+              schema: !include schemas/200.json
+              example: !include response_examples/200/status_region_health.json
           404:
             body:
-              application/json:
-                schema: !include schemas/404.json
-                example: !include response_examples/404/region.json
+              schema: !include schemas/404.json
+              example: !include response_examples/404/region.json
 
     /status/availability/{period}:
       uriParameters:
@@ -89,14 +82,12 @@ mediaType: application/json
         responses:
           200:
             body:
-              application/json:
-                schema: !include schemas/200.json
-                example: !include response_examples/200/status_region_availability.json
+              schema: !include schemas/200.json
+              example: !include response_examples/200/status_region_availability.json
           404:
             body:
-              application/json:
-                schema: !include schemas/404.json
-                example: !include response_examples/404/region.json
+              schema: !include schemas/404.json
+              example: !include response_examples/404/region.json
 
     /status/performance/{period}:
       uriParameters:
@@ -108,14 +99,12 @@ mediaType: application/json
         responses:
           200:
             body:
-              application/json:
-                schema: !include schemas/200.json
-                example: !include response_examples/200/status_region_performance.json
+              schema: !include schemas/200.json
+              example: !include response_examples/200/status_region_performance.json
           404:
             body:
-              application/json:
-                schema: !include schemas/404.json
-                example: !include response_examples/404/region.json
+              schema: !include schemas/404.json
+              example: !include response_examples/404/region.json
 
     /infra:
       get:
@@ -123,14 +112,12 @@ mediaType: application/json
         responses:
           200:
             body:
-              application/json:
-                schema: !include schemas/200.json
-                example: !include response_examples/200/infra.json
+              schema: !include schemas/200.json
+              example: !include response_examples/200/infra.json
           404:
             body:
-              application/json:
-                schema: !include schemas/404.json
-                example: !include response_examples/404/region.json
+              schema: !include schemas/404.json
+              example: !include response_examples/404/region.json
 
   /status/{period}:
     uriParameters:
@@ -142,9 +129,8 @@ mediaType: application/json
       responses:
         200:
           body:
-            application/json:
-              schema: !include schemas/200.json
-              example: !include response_examples/200/status.json
+            schema: !include schemas/200.json
+            example: !include response_examples/200/status.json
 
   /status/health/{period}:
     uriParameters:
@@ -156,9 +142,8 @@ mediaType: application/json
       responses:
         200:
           body:
-            application/json:
-              schema: !include schemas/200.json
-              example: !include response_examples/200/status_health.json
+            schema: !include schemas/200.json
+            example: !include response_examples/200/status_health.json
 
 
   /status/availability/{period}:
@@ -171,9 +156,8 @@ mediaType: application/json
       responses:
         200:
           body:
-            application/json:
-              schema: !include schemas/200.json
-              example: !include response_examples/200/status_availability.json
+            schema: !include schemas/200.json
+            example: !include response_examples/200/status_availability.json
 
 
   /status/performance/{period}:
@@ -186,6 +170,5 @@ mediaType: application/json
       responses:
         200:
           body:
-            application/json:
-              schema: !include schemas/200.json
-              example: !include response_examples/200/status_performance.json
+            schema: !include schemas/200.json
+            example: !include response_examples/200/status_performance.json
