@@ -65,10 +65,6 @@ def get_status(period):
 @fake_status.get_status_health
 def get_status_health(period):
     health_client = client.get_client("health")
-    if not health_client:
-        return (flask.jsonify({"error": "No health endpoint configured"}),
-                404)
-
     api_endpoint = "/api/v1/health/{}".format(period)
 
     result, code = health_client.get(api_endpoint)
@@ -85,10 +81,6 @@ def get_status_performance(period):
 @fake_status.get_status_availability
 def get_status_availability(period):
     ct = client.get_client("availability")
-    if not ct:
-        err = {"error": "No availability endpoint configured"}
-        return flask.jsonify(err), 404
-
     api_endpoint = "/api/v1/availability/{period}".format(period=period)
     resp, code = ct.get(api_endpoint)
     return flask.jsonify(resp), code
@@ -104,10 +96,6 @@ def get_region_status(region, period):
 @fake_status.get_region_status_health
 def get_region_status_health(region, period):
     health_client = client.get_client("health")
-    if not health_client:
-        return (flask.jsonify({"error": "No health endpoint configured"}),
-                404)
-
     api_endpoint = "/api/v1/region/{region}/health/{period}".format(
         region=region, period=period)
 
@@ -126,9 +114,6 @@ def get_region_status_performance(region, period):
 @fake_status.get_region_status_availability
 def get_region_status_availability(region, period):
     ct = client.get_client("availability")
-    if not ct:
-        err = {"error": "No availability endpoint configured"}
-        return flask.jsonify(err), 404
     api_endpoint = "/api/v1/region/{region}/availability/{period}".format(
         region=region, period=period)
     resp, code = ct.get(api_endpoint)
