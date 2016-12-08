@@ -4,10 +4,10 @@ install:
   - pip install tox
 
 env:
-   - TOXENV=pep8
-   - TOXENV=py27
-   - TOXENV=py33
-   - TOXENV=py34
+  - TOXENV=pep8
+  - TOXENV=py27
+  - TOXENV=py33
+  - TOXENV=py34
 
 script:
   - tox
@@ -20,3 +20,18 @@ matrix:
         - pip install coveralls
       env: TOXENV=cover
       after_success: coveralls
+    - language: node_js
+      node_js: "4.2.6"
+      services:
+        - docker
+      install:
+        - docker build -t ceagle .
+        - docker run -d -p 127.0.0.1:5000:5000 ceagle
+        - git clone http://github.com/cybertk/abao
+        - cd abao
+        - git checkout 0.5.0
+        - npm install
+        - cp ../raml/abao_hooks.js hooks.js
+      env:
+      script:
+        - ./bin/abao ../raml/api.raml --server http://127.0.0.1:5000 --hookfiles hooks.js
