@@ -1,6 +1,5 @@
 {
   "region": "west-1.hooli.net",
-
   "services": [
     {
         "menu": "Jenkins",
