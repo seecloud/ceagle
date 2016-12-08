@@ -1,12 +1,12 @@
 #%RAML 0.8
 
-title: "Portal API - DRAFT!!!"
+title: DevOps Portal API
 version: v1
 mediaType: application/json
 
-/api:
+/api/:
   get:
-    description: "List of available versions"
+    description: "List of available API versions"
     responses:
       200:
         body:
@@ -14,9 +14,14 @@ mediaType: application/json
           example: !include response_examples/200/versions.json
 
 /api/{version}:
+  uriParameters:
+    version:
+      description: "API version"
+      type: string
+
   /regions:
     get:
-      description: List of regions
+      description: "List of regions"
       responses:
         200:
           body:
