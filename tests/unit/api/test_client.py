@@ -76,9 +76,9 @@ class ModuleTestCase(test.TestCase):
     def test_get_config(self, mock_config):
         self.assertRaises(TypeError, client.get_client)
         mock_config.get_config.return_value = {"services": {"bar": {}}}
-        self.assertIsNone(client.get_client("foo"))
+        self.assertRaises(client.UnknownService, client.get_client, "foo")
         mock_config.get_config.return_value = {"services": {"foo": ""}}
-        self.assertIsNone(client.get_client("foo"))
+        self.assertRaises(client.UnknownService, client.get_client, "foo")
 
         cfg = {"services": {"foo": "http://foo_ep"}}
         mock_config.get_config.return_value = cfg

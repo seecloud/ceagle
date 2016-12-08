@@ -83,12 +83,12 @@ class HealthApiTestCase(test.TestCase):
     def test_health_api_no_endpoint(self, mock_get_config):
         mock_get_config.return_value = {}
         code, resp = self.get("/api/v1/status/health/day")
-        self.assertEqual(404, code)
-        self.assertEqual({"error": "No health endpoint configured"}, resp)
+        self.assertEqual(400, code)
+        self.assertEqual({"error": "Unknown service 'health'"}, resp)
 
         code, resp = self.get("/api/v1/region/test_region/status/health/day")
-        self.assertEqual(404, code)
-        self.assertEqual({"error": "No health endpoint configured"}, resp)
+        self.assertEqual(400, code)
+        self.assertEqual({"error": "Unknown service 'health'"}, resp)
 
 
 class AvailabilityApiTestCase(test.TestCase):

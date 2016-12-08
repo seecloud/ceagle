@@ -18,6 +18,10 @@ import requests
 from ceagle import config
 
 
+class UnknownService(Exception):
+    pass
+
+
 class Client(object):
     """REST client."""
 
@@ -59,4 +63,4 @@ def get_client(service_name):
     endpoint = config.get_config().get("services", {}).get(service_name)
     if endpoint:
         return Client(name=service_name, endpoint=endpoint)
-    return None
+    raise UnknownService("Unknown service '%s'" % service_name)
