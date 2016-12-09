@@ -22,8 +22,16 @@ from ceagle.api_fake_data import base
 from ceagle.api_fake_data import fake_regions
 
 
-def period_is_valid(period):
-    return period in ("day", "week", "month", "year")
+RESPONSE_TOTAL_NULL_PROBABILITY = 10
+HEALTH_NULL_PROBABILITY = 5
+PERFORMANCE_NULL_PROBABILITY = 5
+AVAILABILITY_NULL_PROBABILITY = 5
+STATUS_NULL_PROBABILITY = 20
+
+
+def validate_period(period):
+    if period not in ("day", "week", "month", "year"):
+        flask.abort(404)
 
 
 def generate_timestamps(period):
@@ -59,8 +67,20 @@ def generate_timestamps(period):
     return stamps
 
 
+def lucky(probability):
+    """Return a boolean status with given probability.
+
+    :param probability: int <= 100,
+                        0 will always cause False result
+    :rtype: bool
+    """
+    if probability:
+        return random.randint(1, 100) <= probability
+    return False
+
+
 def generate_values(period_or_timestamps,
-                    ratio=1, null_result_probability=20, integer=False):
+                    ratio=1, null_probability=20, integer=False):
     if type(period_or_timestamps) == list:
         timestamps = period_or_timestamps
     else:
@@ -69,7 +89,7 @@ def generate_values(period_or_timestamps,
         data = []
         data_avg = []
         for ts in timestamps:
-            if random.randint(1, 100) <= null_result_probability:
+            if lucky(null_probability):
                 data.append([ts, None])
             else:
                 if not integer:
@@ -82,12 +102,16 @@ def generate_values(period_or_timestamps,
         return (data, avg)
 
 
-def generate_service_data(period, service):
+def generate_service_data(period, service, null_allowed):
     if service == "health":
-        fci_data = generate_values(period)[0]
-        time_data = generate_values(period)[0]
-        size_data = generate_values(period, 50, integer=True)[0]
-        count_data = generate_values(period, 50, integer=True)[0]
+        null_probability = null_allowed and HEALTH_NULL_PROBABILITY or 0
+
+        fci_data = generate_values(period, 1, null_probability)[0]
+        time_data = generate_values(period, 1, null_probability)[0]
+        size_data = generate_values(
+            period, 50, null_probability, integer=True)[0]
+        count_data = generate_values(
+            period, 50, null_probability, integer=True)[0]
         return {
             "fci": random.randint(0, 100) * 0.01,
             "response_time": base.randnum(.1, 2.5),
@@ -100,124 +124,116 @@ def generate_service_data(period, service):
         }
 
     elif service == "performance":
-        data, avg = generate_values(period)
+        null_probability = null_allowed and PERFORMANCE_NULL_PROBABILITY or 0
+        data, avg = generate_values(period, 1, null_probability)
         return {"data": data, "duration": avg}
 
     elif service == "availability":
-        data, avg = generate_values(period)
+        null_probability = null_allowed and AVAILABILITY_NULL_PROBABILITY or 0
+        data, avg = generate_values(period, 1, null_probability)
         return {"availability_data": data, "availability": avg}
 
 
-def generate_region_data(region, period, service=None):
+def generate_region_data(region, period, service, null_allowed):
     data = fake_regions.regions(detailed=True).get(region)
 
     if not data:
         return ({"error": "Region '%s' not found" % region}, 404)
 
-    if service:
-        if service not in data["services"]:
-            error = ("Service '%s' is not available for region '%s'"
-                     % (service, region))
-            return ({"error": error}, 404)
+    if service not in data["services"]:
+        error = ("Service '%s' is not available for region '%s'"
+                 % (service, region))
+        return ({"error": error}, 404)
 
-        result = generate_service_data(period, service)
-        return ({service: {region: result}, "period": period}, 200)
-
-    result = {"sla": base.randnum(.7, 1)}
-    for service in ("availability", "performance", "health"):
-        if service in data["services"]:
-            result[service] = generate_service_data(period, service)
-
-    return ({"period": period, "status": {region: result}}, 200)
+    result = generate_service_data(period, service, null_allowed)
+    return ({service: {region: result}, "period": period}, 200)
 
 
 def generate_status_data(period, service):
-    if not period_is_valid(period):
-        return flask.jsonify({"error": "Not Found"}), 404
-
+    null_allowed = lucky(RESPONSE_TOTAL_NULL_PROBABILITY)
     data = {}
     for region in fake_regions.regions():
-        result, code = generate_region_data(region, period, service)
+        result, code = generate_region_data(region, period, service,
+                                            null_allowed)
         if code == 200:
             data.update(result[service])
     return flask.jsonify({"period": period, service: data})
 
 
-def generate_region_data_response(region, period, service=None):
-    if not period_is_valid(period):
-        return flask.jsonify({"error": "Not Found"}), 404
-
-    result, code = generate_region_data(region, period, service)
-    return (flask.jsonify(result), code)
-
-
 @base.api_handler
 def get_status(period):
-    if not period_is_valid(period):
-        flask.abort(404)
+    validate_period(period)
     status = {}
-    rand = random.random
+    rand = lambda: None if lucky(STATUS_NULL_PROBABILITY) else random.random()
     for region in fake_regions.regions():
-        status[region] = {
-            "sla": rand() if rand() > 0.4 else None,
-            "performance": random.randint(1, 10),
-            "availability": rand() if rand() > 0.4 else None,
-            "health": rand() if rand() > 0.4 else None
-        }
+        status[region] = {"sla": rand(),
+                          "performance": random.randint(1, 10),
+                          "availability": rand(),
+                          "health": rand()}
     return flask.jsonify({"status": status, "period": period})
 
 
 @base.api_handler
 def get_status_health(period):
+    validate_period(period)
     return generate_status_data(period, "health")
 
 
 @base.api_handler
 def get_status_performance(period):
+    validate_period(period)
     return generate_status_data(period, "performance")
 
 
 @base.api_handler
 def get_status_availability(period):
+    validate_period(period)
     return generate_status_data(period, "availability")
 
 
 @base.api_handler
 def get_region_status(region, period):
-    if not period_is_valid(period):
-        flask.abort(404)
-
+    validate_period(period)
     data = fake_regions.regions(detailed=True).get(region)
     if not data:
         return ({"error": "Region '%s' not found" % region}, 404)
 
+    if lucky(RESPONSE_TOTAL_NULL_PROBABILITY):
+        rand = lambda: (None if lucky(STATUS_NULL_PROBABILITY)
+                        else random.random())
+    else:
+        rand = random.random
+
     status = {}
-    rand = random.random
     for service in ("keystone", "nova", "cinder"):
-        status[service] = {
-            "sla": rand() if rand() > 0.4 else None,
-            "performance": random.randint(1, 10),
-            "availability": rand() if rand() > 0.4 else None,
-            "health": rand() if rand() > 0.4 else None
-        }
+        status[service] = {"sla": rand(),
+                           "performance": random.randint(1, 10),
+                           "availability": rand(),
+                           "health": rand()}
     return flask.jsonify({"status": status, "period": period})
 
 
 @base.api_handler
 def get_region_status_health(region, period):
-    return generate_region_data_response(region, period, "health")
+    validate_period(period)
+    null_allowed = lucky(RESPONSE_TOTAL_NULL_PROBABILITY)
+    result, code = generate_region_data(
+        region, period, "health", null_allowed)
+    return flask.jsonify(result), code
 
 
 @base.api_handler
 def get_region_status_performance(region, period):
-    return generate_region_data_response(region, period, "performance")
+    validate_period(period)
+    null_allowed = lucky(RESPONSE_TOTAL_NULL_PROBABILITY)
+    result, code = generate_region_data(
+        region, period, "performance", null_allowed)
+    return flask.jsonify(result), code
 
 
 @base.api_handler
 def get_region_status_availability(region, period):
-    if not period_is_valid(period):
-        return flask.jsonify({"error": "Not Found"}), 404
-
+    validate_period(period)
     region_data = fake_regions.regions(detailed=True).get(region)
 
     if not region_data:
@@ -228,9 +244,12 @@ def get_region_status_availability(region, period):
                      % ("availability", region))
             return flask.jsonify({"error": error}), 404
 
+    null_probability = (lucky(RESPONSE_TOTAL_NULL_PROBABILITY)
+                        and PERFORMANCE_NULL_PROBABILITY or 0)
+
     availability = {}
     for svc in ["foo_service", "bar_service", "spam_service"]:
-        data, avg = generate_values(period)
+        data, avg = generate_values(period, 1, null_probability)
         availability[svc] = {"availability_data": data,
                              "availability": avg}
 
