@@ -2,7 +2,7 @@ language: python
 
 install:
   - pip install tox
-
+  
 env:
    - TOXENV=pep8
    - TOXENV=py27
@@ -20,3 +20,7 @@ matrix:
         - pip install coveralls
       env: TOXENV=cover
       after_success: coveralls
+      
+    - node_js: "6"
+      env:
+        - TOXENV=raml      
