@@ -1,0 +1,16 @@
+runbook:
+  description: Base64-encoded body of the runbook
+  required: true
+  type: string
+description:
+  description: Human-readable runbooks description
+  required: true
+  type: string
+name:
+  description: Name of the runbook
+  required: true
+  type: string
+type:
+  description: Type (i.e. bash, python, etc) of the runbook
+  required: true
+  type: string

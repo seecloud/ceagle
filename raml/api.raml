@@ -150,6 +150,106 @@ mediaType: application/json
               schema: !include schemas/404.json
               example: !include response_examples/404/region.json
 
+    /runbooks:
+      get:
+        description: List all runbooks for current region
+        responses:
+          200:
+            body:
+              schema: !include schemas/200.json
+              example: !include response_examples/200/runbooks.json
+          404:
+            body:
+              schema: !include schemas/404.json
+      post:
+        description: Create a new runbook
+        body:
+          application/json:
+            formParameters: !include forms/runbook.yaml
+        responses:
+          201:
+            body:
+              schema: !include schemas/200.json
+              example: !include response_examples/200/single_runbook.json
+          400:
+            body:
+              schema: !include schemas/404.json
+
+      /{runbook_id}:
+        uriParameters:
+          runbook_id:
+            description: Id of a particular runbook
+            type: string
+        get:
+          description: Get a particular runbook
+          responses:
+            200:
+              body:
+                schema: !include schemas/200.json
+                example: !include response_examples/200/single_runbook.json
+            404:
+              body:
+                schema: !include schemas/404.json
+        put:
+          body:
+            application/json:
+              formParameters: !include forms/runbook.yaml
+          description: Update contents of a runbook
+          responses:
+            200:
+              body:
+                schema: !include schemas/200.json
+                example: !include response_examples/200/single_runbook.json
+            400:
+              body:
+                schema: !include schemas/404.json
+            404:
+              body:
+                schema: !include schemas/404.json
+        delete:
+          description: Delete a runbook
+          responses:
+            204:
+            404:
+              body:
+                schema: !include schemas/404.json
+        /run:
+          post:
+            description: Schedule a run of the runbook
+            responses:
+              202:
+                body:
+                  schema: !include schemas/200.json
+              404:
+                body:
+                  schema: !include schemas/404.json
+        /runs:
+          get:
+            description: Get list of all runs of a runbook
+            responses:
+              200:
+                body:
+                  schema: !include schemas/200.json
+                  example: !include response_examples/200/runbook_runs.json
+              404:
+                body:
+                  schema: !include schemas/404.json
+          /{run_id}:
+            uriParameters:
+              run_id:
+                description: id of a runbook run
+                type: string
+            get:
+              description: Get information and description of a run of the runbook
+              responses:
+                200:
+                  body:
+                    schema: !include schemas/200.json
+                    example: !include response_examples/200/single_runbook_run.json
+                404:
+                  body:
+                    schema: !include schemas/404.json
+
     /infra:
       get:
         description: "Information about region's infrastructure services"
