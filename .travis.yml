@@ -27,7 +27,7 @@ matrix:
         - docker
       install:
         - docker build -t ceagle .
-        - docker run -d -p 127.0.0.1:5000:5000 -e "CEAGLE_CONF=/app/tests/ci/fake-clients-config.json" ceagle
+        - docker run -d -p 127.0.0.1:5000:5000 ceagle
         - git clone http://github.com/cybertk/abao
         - cd abao
         - git checkout 0.5.0

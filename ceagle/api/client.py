@@ -16,11 +16,11 @@
 import requests
 
 from ceagle.api import base
-from ceagle.api_fake_data import fake_security
+from ceagle.api_fake_data import security
 from ceagle import config
 
 FAKE_CLIENT_MAP = {
-    "security": fake_security.Client,
+    "security": security.Client,
 }
 
 
@@ -63,9 +63,8 @@ def get_client(service_name):
         if client_class is None:
             raise NotImplementedError(
                 "Fake client for '%s' is not implemented" % service_name)
-    else:
-        client_class = Client
+        return client_class(name=service_name, endpoint="_fake_")
     endpoint = config.get_config().get("services", {}).get(service_name)
     if endpoint:
-        return client_class(name=service_name, endpoint=endpoint)
+        return Client(name=service_name, endpoint=endpoint)
     raise UnknownService("Unknown service '%s'" % service_name)
