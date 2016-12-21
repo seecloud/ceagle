@@ -42,15 +42,15 @@ def run_runbook(region, book_id):
     return flask.jsonify("fixme!")
 
 
-@bp.route("/<region>/runbooks/<book_id>/runs")
+@bp.route("/<region>/runbook_runs")
 @fake_runbooks.runbook_runs
-def runbook_runs(region, book_id):
+def runbook_runs(region):
     return flask.jsonify("fixme!")
 
 
-@bp.route("/<region>/runbooks/<book_id>/runs/<run_id>")
+@bp.route("/<region>/runbook_runs/<run_id>")
 @fake_runbooks.single_runbook_run
-def single_runbook_run(region, book_id, run_id):
+def single_runbook_run(region, run_id):
     return flask.jsonify("fixme!")
 
 

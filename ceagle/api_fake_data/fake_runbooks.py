@@ -22,18 +22,28 @@ from ceagle.api_fake_data import base
 
 
 def get_single_runbook():
-    return {
+    tag_choices = [
+        ["Monitoring"],
+        ["Databases"],
+        ["Monitoring", "Databases"],
+        None
+    ]
+    tags = random.choice(tag_choices)
+    runbook = {
         "_id": str(random.randint(1, 1000)),
         "description": "Demo runbook description",
         "name": "Demo runbook",
         "type": "bash",
         "runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK"
     }
+    if tags:
+        runbook["tags"] = tags
+    return runbook
 
 
 def get_single_run():
-    started_at = datetime.datetime.now().isoformat()
-    finished_at = (datetime.datetime.now() + datetime.timedelta(
+    finished_at = datetime.datetime.now().isoformat()
+    started_at = (datetime.datetime.now() - datetime.timedelta(
         minutes=random.randint(1, 20))).isoformat()
     return {
         "_id": str(random.randint(1, 1000)),
@@ -88,12 +98,12 @@ def run_runbook(region, book_id):
 
 
 @base.api_handler
-def runbook_runs(region, book_id):
+def runbook_runs(region):
     return flask.jsonify(
         {"runs": [get_single_run() for i in range(10)]}
     )
 
 
 @base.api_handler
-def single_runbook_run(region, book_id, run_id):
+def single_runbook_run(region, run_id):
     return flask.jsonify(get_single_run()), 200

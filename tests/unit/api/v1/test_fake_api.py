@@ -54,15 +54,12 @@ class FakeApiTestCase(test.TestCase):
         region = "region_one"
         runbook_id = "123"
         run_id = "123"
-        for uri in (
-            "/api/v1/region/%s/runbooks" % region,
-            "/api/v1/region/%s/runbooks/%s" % (region, runbook_id),
-            "/api/v1/region/%s/runbooks/%s/runs" % (region, runbook_id),
-            "/api/v1/region/%s/runbooks/%s/runs/%s" % (
-                region, runbook_id, run_id)):
-
-                code_, resp = self.get(uri)
-                self.assertEqual(200, code_)
+        for uri in ("/api/v1/region/%s/runbooks" % region,
+                    "/api/v1/region/%s/runbooks/%s" % (region, runbook_id),
+                    "/api/v1/region/%s/runbook_runs" % region,
+                    "/api/v1/region/%s/runbook_runs/%s" % (region, run_id)):
+            code_, resp = self.get(uri)
+            self.assertEqual(200, code_)
 
         correct_runbook = {
             "name": "test",

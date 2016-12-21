@@ -165,12 +165,12 @@ hooks.before('POST /api/{version}/region/{region}/runbooks/{runbook_id}/run -> 2
   done();
 });
 
-hooks.before('GET /api/{version}/region/{region}/runbooks/{runbook_id}/runs -> 200', function (test, done) {
+hooks.before('GET /api/{version}/region/{region}/runbook_runs -> 200', function (test, done) {
   test.request.params = paramsRunBookRun;
   done();
 });
 
-hooks.before('GET /api/{version}/region/{region}/runbooks/{runbook_id}/runs/{run_id} -> 200', function (test, done) {
+hooks.before('GET /api/{version}/region/{region}/runbook_runs/{run_id} -> 200', function (test, done) {
   test.request.params = paramsRunBookRun;
   done();
 });

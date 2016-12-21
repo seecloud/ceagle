@@ -223,32 +223,32 @@ mediaType: application/json
               404:
                 body:
                   schema: !include schemas/404.json
-        /runs:
-          get:
-            description: Get list of all runs of a runbook
-            responses:
-              200:
-                body:
-                  schema: !include schemas/200.json
-                  example: !include response_examples/200/runbook_runs.json
-              404:
-                body:
-                  schema: !include schemas/404.json
-          /{run_id}:
-            uriParameters:
-              run_id:
-                description: id of a runbook run
-                type: string
-            get:
-              description: Get information and description of a run of the runbook
-              responses:
-                200:
-                  body:
-                    schema: !include schemas/200.json
-                    example: !include response_examples/200/single_runbook_run.json
-                404:
-                  body:
-                    schema: !include schemas/404.json
+    /runbook_runs:
+      get:
+        description: Get list of all runs of a runbook
+        responses:
+          200:
+            body:
+              schema: !include schemas/200.json
+              example: !include response_examples/200/runbook_runs.json
+          404:
+            body:
+              schema: !include schemas/404.json
+      /{run_id}:
+        uriParameters:
+          run_id:
+            description: id of a runbook run
+            type: string
+        get:
+          description: Get information and description of a run of the runbook
+          responses:
+            200:
+              body:
+                schema: !include schemas/200.json
+                example: !include response_examples/200/single_runbook_run.json
+            404:
+              body:
+                schema: !include schemas/404.json
 
     /infra:
       get:

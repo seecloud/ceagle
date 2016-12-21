@@ -5,6 +5,7 @@
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+			"tags": ["Monitoring"],
 			"type": "bash"
 		},
 		{
@@ -12,6 +13,7 @@
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+			"tags": ["Monitoring", "Databases"],
 			"type": "bash"
 		},
 		{
@@ -19,6 +21,7 @@
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+			"tags": ["Monitoring", "Databases"],
 			"type": "bash"
 		},
 		{
@@ -26,6 +29,7 @@
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+			"tags": ["Databases"],
 			"type": "bash"
 		},
 		{
@@ -33,6 +37,7 @@
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+			"tags": ["Databases"],
 			"type": "bash"
 		},
 		{
@@ -61,6 +66,7 @@
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+			"tags": ["Monitoring"],
 			"type": "bash"
 		},
 		{
@@ -68,6 +74,7 @@
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+			"tags": ["Monitoring"],
 			"type": "bash"
 		}
 	]
