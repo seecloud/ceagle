@@ -15,11 +15,64 @@
 
 import functools
 import random
+import re
 
 from ceagle import config
 
-
 USE_FAKE_DATA = config.get_config().get("use_fake_api_data", True)
+
+
+def route(reg):
+    def decorator(method):
+        method._route = re.compile("^%s$" % reg)
+        return method
+    return decorator
+
+
+class FakeClient(object):
+    """Base fake client.
+
+    Usage:
+
+    >>> from ceagle.api_fake_data import base
+    >>> class MyClient(base.FakeClient):
+    ...  @base.route(r"/api/(?P<method>)")
+    ...  def _method(self, query, method):
+    ...   return {"query": query}, 200
+    ...
+    >>> c = MyClient(name="name", endpoint="endpoint")
+    >>> resp, code = c.get("/api/foo", foo="bar")
+    >>> assert code == 200
+    >>> assert resp == {"query": {"foo": "bar"}}
+
+    """
+
+    def __init__(self, name, endpoint):
+        self._setup_routing()
+
+    def _setup_routing(self):
+        self._routes = []
+        for attr in dir(self):
+            method = getattr(self, attr)
+            route = getattr(method, "_route", None)
+            if route:
+                self._routes.append((route, method))
+
+    def _find_route(self, path):
+        for reg, method in self._routes:
+            match = reg.match(path)
+            if match:
+                return method, match
+        return None, None
+
+    def default(self, path, *args, **kwargs):
+        return ("not found", 404)
+
+    def get(self, path, **kwargs):
+        method, match = self._find_route(path)
+        if method is None:
+            return self.default(path, **kwargs)
+        return method(kwargs, **match.groupdict())
 
 
 def api_handler(fake):

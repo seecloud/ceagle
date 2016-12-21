@@ -38,3 +38,11 @@ class ModuleTestCase(test.TestCase):
         self.assertEqual(3828.18, base.randnum(10, 100))
         self.assertEqual(3828.2, base.randnum(10, 100, 1))
         self.assertEqual([mock.call()] * 3, mock_random.random.mock_calls)
+
+
+class FakeClientTestCase(test.TestCase):
+
+    def test_default(self):
+        c = base.FakeClient("name", "endpoint")
+        res = c.get("/none")
+        self.assertEqual(404, res[1])

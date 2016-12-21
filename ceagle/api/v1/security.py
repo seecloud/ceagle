@@ -20,12 +20,20 @@ from ceagle.api import client
 security = flask.Blueprint("security", __name__)
 
 
-@security.route("/<region>/security/issues/<period>", methods=["GET"])
+@security.route("/region/<region>/security/issues/<period>", methods=["GET"])
 def get_issues(region, period):
     c = client.get_client("security")
-    body, status = c.get("%s/security/issues/%s" % (region, period))
+    body, status = c.get(
+        "/api/v1/region/%s/security/issues/%s" % (region, period))
+    return flask.jsonify(body), status
+
+
+@security.route("/security/issues/<period>", methods=["GET"])
+def get_issues_all_regions(period):
+    c = client.get_client("security")
+    body, status = c.get("/api/v1/security/issues/%s" % period)
     return flask.jsonify(body), status
 
 
 def get_blueprints():
-    return [["/region", security]]
+    return [["", security]]

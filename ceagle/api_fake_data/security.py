@@ -15,7 +15,9 @@
 
 import datetime
 
-from ceagle.api import base
+import flask
+
+from ceagle.api_fake_data import base
 
 
 def _get_fake_issue(region, issue_type, days):
@@ -32,9 +34,9 @@ def _get_fake_issue(region, issue_type, days):
     }
 
 FAKE_ISSUES = {
-    "Region1": [
-        _get_fake_issue("Region1", "IssueType1", 2),
-        _get_fake_issue("Region1", "IssueType2", 8),
+    "region1": [
+        _get_fake_issue("region1", "IssueType1", 2),
+        _get_fake_issue("region1", "IssueType2", 8),
     ],
     "north-2.piedpiper.net": [
         _get_fake_issue("north-2.piedpiper.net", "IssueType1", 0),
@@ -49,31 +51,40 @@ PERIOD_MAP = {
     "month": 30,
 }
 
+REGION_R = r"(?P<region>[a-z\d\-\.\_]+)"
+PERIOD_R = r"(?P<period>day|week|month)"
 
-class Client(base.Client):
 
-    def get(self, uri="/", **kwargs):
-        """Make GET request and decode JSON data.
-
-        :param uri: resource URI
-        :param kwargs: query parameters
-        :returns: dict response data
-        """
-        region, security, issues, period = uri.split("/")
-        if issues != "issues":
-            return {"error": "Not found"}, 404
-        issues = []
+def _get_issues(region, period):
+    issues = []
+    if region:
         all_issues = FAKE_ISSUES.get(region)
-        if all_issues:
-            now = datetime.datetime.now()
-            try:
-                discovered_before = (now - datetime.timedelta(
-                    days=PERIOD_MAP[period])).isoformat("T")
-            except KeyError:
-                return {"error": "Not found"}, 404
-            for issue in all_issues:
-                if issue["discovered_at"] >= discovered_before:
-                    issues.append(issue)
-        else:
-            return {"error": "Region not found"}, 404
-        return {"issues": issues}, 200
+        if all_issues is None:
+            flask.abort(404)
+    else:
+        all_issues = sum(FAKE_ISSUES.values(), [])
+    now = datetime.datetime.now()
+    try:
+        discovered_before = (now - datetime.timedelta(
+            days=PERIOD_MAP[period])).isoformat("T")
+    except KeyError:
+        flask.abort(404)
+    for issue in all_issues:
+        if issue["discovered_at"] >= discovered_before:
+            issues.append(issue)
+    return issues
+
+
+class Client(base.FakeClient):
+
+    @base.route("/api/(?P<api>\w+)/regions")
+    def _regions(self, query, api):
+        return list(FAKE_ISSUES.keys()), 200
+
+    @base.route(r"/api/v1/region/%s/security/issues/%s" % (REGION_R, PERIOD_R))
+    def issues(self, query, region, period):
+        return {"issues": _get_issues(region, period)}, 200
+
+    @base.route(r"/api/v1/security/issues/%s" % PERIOD_R)
+    def issues_all_regions(self, query, period):
+        return {"issues": _get_issues(None, period)}, 200

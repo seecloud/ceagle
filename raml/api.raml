@@ -37,6 +37,19 @@ mediaType: application/json
             schema: !include schemas/200.json
             example: !include response_examples/200/regions_detailed.json
 
+  /security/issues/{period}:
+    uriParameters:
+      period:
+        description: "Return issues discovered at specific period"
+        enum: ["day", "week", "month"]
+    get:
+      description: "Return list of Issue objects"
+      responses:
+        200:
+          body:
+            schema: !include schemas/200.json
+            example: !include response_examples/200/security_issues.json
+
   /region/{region}:
     uriParameters:
       region:
