@@ -13,19 +13,13 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import flask
 
-from ceagle.api import client
+class Client(object):
+    """REST client."""
 
-security = flask.Blueprint("security", __name__)
+    def __init__(self, name, endpoint):
+        self.name = name
+        self.endpoint = endpoint
 
-
-@security.route("/<region>/security/issues/<period>", methods=["GET"])
-def get_issues(region, period):
-    c = client.get_client("security")
-    body, status = c.get("%s/security/issues/%s" % (region, period))
-    return flask.jsonify(body), status
-
-
-def get_blueprints():
-    return [["/region", security]]
+    def __repr__(self):
+        return "<Client '%s'>" % self.name

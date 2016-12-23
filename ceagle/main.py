@@ -16,6 +16,7 @@
 import flask
 from flask_helpers import routing
 
+from ceagle.api import client
 from ceagle.api.v1 import capacity
 from ceagle.api.v1 import infrastructure
 from ceagle.api.v1 import intelligence
@@ -42,6 +43,11 @@ def versions():
 @app.errorhandler(404)
 def not_found(error):
     return flask.jsonify({"error": "Not Found"}), 404
+
+
+@app.errorhandler(client.UnknownService)
+def handle_unknown_service(ex):
+    return flask.jsonify({"error": str(ex)}), 404
 
 
 for bp in [status, infrastructure, intelligence, optimization, security,

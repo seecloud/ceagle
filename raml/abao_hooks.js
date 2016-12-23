@@ -66,6 +66,16 @@ hooks.before('GET /api/{version}/region/{region}/infra -> 404', function (test, 
   done();
 });
 
+hooks.before('GET /api/{version}/region/{region}/security/issues/{period} -> 200', function (test, done) {
+  test.request.params = params;
+  done();
+});
+
+hooks.before('GET /api/{version}/region/{region}/security/issues/{period} -> 404', function (test, done) {
+  test.request.params = paramsBadRegion;
+  done();
+});
+
 hooks.before('GET /api/{version}/status/{period} -> 200', function (test, done) {
   test.request.params = params;
   done();
