@@ -163,7 +163,6 @@ mediaType: application/json
             schema: !include schemas/200.json
             example: !include response_examples/200/status_health.json
 
-
   /status/availability/{period}:
     uriParameters:
       period:
@@ -176,7 +175,6 @@ mediaType: application/json
           body:
             schema: !include schemas/200.json
             example: !include response_examples/200/status_availability.json
-
 
   /status/performance/{period}:
     uriParameters:

@@ -5,6 +5,7 @@ install:
 
 env:
   - TOXENV=pep8
+  - TOXENV=yamllint
   - TOXENV=py27
   - TOXENV=py33
   - TOXENV=py34
