@@ -14,7 +14,7 @@
 #    under the License.
 
 import flask
-from flask_helpers import routing
+from oss_lib import routing
 
 from ceagle.api import client
 from ceagle.api.v1 import capacity
