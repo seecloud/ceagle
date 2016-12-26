@@ -25,5 +25,5 @@ service:
 
 files:
   ceagle.conf:
-    path: /etc/ceagle/config.json
-    content: ceagle.json.j2
+    path: /etc/ceagle/config.yaml
+    content: ceagle.yaml.j2
