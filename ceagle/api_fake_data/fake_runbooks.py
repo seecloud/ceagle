@@ -21,42 +21,62 @@ import flask
 from ceagle.api_fake_data import base
 
 
-def get_single_runbook():
+def get_single_runbook(with_latest_run=True):
     tag_choices = [
         ["Monitoring"],
         ["Databases"],
         ["Monitoring", "Databases"],
-        None
+        [],
     ]
-    tags = random.choice(tag_choices)
+    parameter_choices = [
+        [{"name": "user"}, {"name": "password"}],
+        None,
+    ]
+    region_choices = [
+        "region_one", "region_two"
+    ]
     runbook = {
-        "_id": str(random.randint(1, 1000)),
+        "id": str(random.randint(1, 1000)),
         "description": "Demo runbook description",
         "name": "Demo runbook",
         "type": "bash",
-        "runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK"
+        "runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+        "latest_run": None,
+        "tags": random.choice(tag_choices),
+        "parameters": random.choice(parameter_choices),
+        "regionId": random.choice(region_choices),
     }
-    if tags:
-        runbook["tags"] = tags
+
+    if with_latest_run:
+        runbook['latest_run'] = get_single_run(False)
     return runbook
 
 
-def get_single_run():
+def get_single_run(with_parent=True):
     finished_at = datetime.datetime.now().isoformat()
     started_at = (datetime.datetime.now() - datetime.timedelta(
         minutes=random.randint(1, 20))).isoformat()
-    return {
-        "_id": str(random.randint(1, 1000)),
-        "started_at": started_at,
-        "finished_at": finished_at,
+
+    region_choices = [
+        "region_one", "region_two"
+    ]
+    run = {
+        "id": str(random.randint(1, 1000)),
+        "created_at": started_at,
+        "updated_at": finished_at,
         "user": "cloud_user",
         "output": "SGVsbG8gV29ybGQhCg==",
         "return_code": 0,
+        "parent": None,
+        "regionId": random.choice(region_choices),
     }
+    if with_parent:
+        run["parent"] = get_single_runbook(False)
+    return run
 
 
 @base.api_handler
-def handle_runbooks(region):
+def handle_runbooks(region=None):
     if flask.request.method == "POST":
         body = flask.request.get_json(silent=True) or {}
         for field in ["description", "name",
@@ -64,7 +84,7 @@ def handle_runbooks(region):
             if field not in body:
                 return flask.jsonify(
                     {"error": "missing {}".format(field)}), 400
-        body["_id"] = str(random.randint(1, 1000))
+        body["id"] = str(random.randint(1, 1000))
         return flask.jsonify(body), 201
     return flask.jsonify(
         {"runbooks": [get_single_runbook() for i in range(10)]}
@@ -82,7 +102,7 @@ def handle_single_runbook(region, book_id):
             if field not in body:
                 return flask.jsonify(
                     {"error": "missing {}".format(field)}), 400
-        body["_id"] = book_id
+        body["id"] = book_id
         return flask.jsonify(body)
     elif flask.request.method == "DELETE":
         return '', 204
@@ -98,7 +118,7 @@ def run_runbook(region, book_id):
 
 
 @base.api_handler
-def runbook_runs(region):
+def runbook_runs(region=None):
     return flask.jsonify(
         {"runs": [get_single_run() for i in range(10)]}
     )

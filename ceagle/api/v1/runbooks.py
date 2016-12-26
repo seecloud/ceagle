@@ -21,34 +21,36 @@ from ceagle.api_fake_data import fake_runbooks
 bp = flask.Blueprint("runbooks", __name__)
 
 
-@bp.route("/<region>/runbooks",
+@bp.route("/runbooks", methods=["GET"])
+@bp.route("/region/<region>/runbooks",
           methods=["GET", "POST"])
 @fake_runbooks.handle_runbooks
-def handle_runbooks(region):
+def handle_runbooks(region=None):
     return flask.jsonify("fixme!")
 
 
-@bp.route("/<region>/runbooks/<book_id>",
+@bp.route("/region/<region>/runbooks/<book_id>",
           methods=["GET", "PUT", "DELETE"])
 @fake_runbooks.handle_single_runbook
 def handle_single_runbook(region, book_id):
     return flask.jsonify("fixme!")
 
 
-@bp.route("/<region>/runbooks/<book_id>/run",
+@bp.route("/region/<region>/runbooks/<book_id>/run",
           methods=["POST"])
 @fake_runbooks.run_runbook
 def run_runbook(region, book_id):
     return flask.jsonify("fixme!")
 
 
-@bp.route("/<region>/runbook_runs")
+@bp.route("/runbook_runs")
+@bp.route("/region/<region>/runbook_runs")
 @fake_runbooks.runbook_runs
-def runbook_runs(region):
+def runbook_runs(region=None):
     return flask.jsonify("fixme!")
 
 
-@bp.route("/<region>/runbook_runs/<run_id>")
+@bp.route("/region/<region>/runbook_runs/<run_id>")
 @fake_runbooks.single_runbook_run
 def single_runbook_run(region, run_id):
     return flask.jsonify("fixme!")
@@ -56,5 +58,5 @@ def single_runbook_run(region, run_id):
 
 def get_blueprints():
     return [
-        ["/region", bp],
+        ["", bp],
     ]

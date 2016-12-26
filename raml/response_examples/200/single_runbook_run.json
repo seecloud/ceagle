@@ -1,8 +1,18 @@
 {
-	"_id": "220",
-	"finished_at": "2016-12-20T16:29:21.789396",
-	"output": "SGVsbG8gV29ybGQhCg==",
-	"return_code": 0,
-	"started_at": "2016-12-20T16:20:21.789320",
-	"user": "cloud_user"
+    "id": "434",
+    "updated_at": "2016-12-20T16:27:42.150227",
+    "output": "SGVsbG8gV29ybGQhCg==",
+    "return_code": 0,
+    "created_at": "2016-12-20T16:18:42.150142",
+    "status": "scheduled",
+    "runbook": {
+        "id": "602",
+        "description": "Demo runbook description",
+        "name": "Demo runbook",
+        "runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+        "tags": ["Monitoring"],
+        "latest_run": null
+        "type": "bash"
+    },
+    "user": "cloud_user"
 }

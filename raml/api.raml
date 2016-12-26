@@ -314,3 +314,26 @@ mediaType: application/json
           body:
             schema: !include schemas/200.json
             example: !include response_examples/200/status_performance.json
+  /runbook_runs:
+    get:
+      description: Get list of all runs of all runbooks in all regions
+      responses:
+        200:
+          body:
+            schema: !include schemas/200.json
+            example: !include response_examples/200/runbook_runs.json
+        404:
+          body:
+            schema: !include schemas/404.json
+
+  /runbooks:
+    get:
+      description: List all runbooks for all regions
+      responses:
+        200:
+          body:
+            schema: !include schemas/200.json
+            example: !include response_examples/200/runbooks.json
+        404:
+          body:
+            schema: !include schemas/404.json

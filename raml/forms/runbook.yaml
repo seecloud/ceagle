@@ -14,3 +14,12 @@ type:
   description: Type (i.e. bash, python, etc) of the runbook
   required: true
   type: string
+# There seems to be no way to set array parameters for forms
+# tags:
+#  description: List of tags
+#  required: false
+#  type: array
+# parameters:
+#  description: List of runbook parameters
+#  required: false
+#  type: array

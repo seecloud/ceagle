@@ -116,6 +116,11 @@ hooks.before('GET /api/{version}/region/{region}/runbooks -> 200', function (tes
   done();
 });
 
+hooks.before('GET /api/{version}/runbooks -> 200', function (test, done) {
+  test.request.params = params;
+  done();
+});
+
 hooks.before('POST /api/{version}/region/{region}/runbooks -> 201', function (test, done) {
   test.request.params = params;
   test.request.body = correctRunbook;
@@ -161,6 +166,11 @@ hooks.before('DELETE /api/{version}/region/{region}/runbooks/{runbook_id} -> 204
 });
 
 hooks.before('POST /api/{version}/region/{region}/runbooks/{runbook_id}/run -> 202', function (test, done) {
+  test.request.params = paramsRunBookRun;
+  done();
+});
+
+hooks.before('GET /api/{version}/runbook_runs -> 200', function (test, done) {
   test.request.params = paramsRunBookRun;
   done();
 });

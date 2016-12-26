@@ -1,80 +1,173 @@
 {
 	"runbooks": [
 		{
-			"_id": "602",
+			"id": "602",
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
 			"tags": ["Monitoring"],
+			"latest_run": {
+                "id": "868",
+                "updated_at": "2016-12-20T16:33:42.150761",
+                "output": "SGVsbG8gV29ybGQhCg==",
+                "return_code": 0,
+                "created_at": "2016-12-20T16:18:42.150736",
+			    "status": "scheduled",
+                "user": "cloud_user"
+            },
 			"type": "bash"
 		},
 		{
-			"_id": "246",
+			"id": "246",
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
 			"tags": ["Monitoring", "Databases"],
+			"latest_run": {
+                "id": "868",
+                "updated_at": "2016-12-20T16:33:42.150761",
+                "output": "SGVsbG8gV29ybGQhCg==",
+                "return_code": 0,
+                "created_at": "2016-12-20T16:18:42.150736",
+			    "status": "scheduled",
+                "user": "cloud_user"
+            },
 			"type": "bash"
 		},
 		{
-			"_id": "161",
+			"id": "161",
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
 			"tags": ["Monitoring", "Databases"],
+			"latest_run": {
+                "id": "868",
+                "updated_at": "2016-12-20T16:33:42.150761",
+                "output": "SGVsbG8gV29ybGQhCg==",
+                "return_code": 0,
+                "created_at": "2016-12-20T16:18:42.150736",
+			    "status": "scheduled",
+                "user": "cloud_user"
+            },
 			"type": "bash"
 		},
 		{
-			"_id": "622",
+			"id": "622",
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
 			"tags": ["Databases"],
+			"latest_run": {
+                "id": "868",
+                "updated_at": "2016-12-20T16:33:42.150761",
+                "output": "SGVsbG8gV29ybGQhCg==",
+                "return_code": 0,
+                "created_at": "2016-12-20T16:18:42.150736",
+			    "status": "scheduled",
+                "user": "cloud_user"
+            },
 			"type": "bash"
 		},
 		{
-			"_id": "439",
+			"id": "439",
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
 			"tags": ["Databases"],
+			"latest_run": {
+                "id": "868",
+                "updated_at": "2016-12-20T16:33:42.150761",
+                "output": "SGVsbG8gV29ybGQhCg==",
+                "return_code": 0,
+                "created_at": "2016-12-20T16:18:42.150736",
+			    "status": "scheduled",
+                "user": "cloud_user"
+            },
 			"type": "bash"
 		},
 		{
-			"_id": "409",
+			"id": "409",
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+			"tags": [],
+			"latest_run": {
+                "id": "868",
+                "updated_at": "2016-12-20T16:33:42.150761",
+                "output": "SGVsbG8gV29ybGQhCg==",
+                "return_code": 0,
+                "created_at": "2016-12-20T16:18:42.150736",
+			    "status": "scheduled",
+                "user": "cloud_user"
+            },
 			"type": "bash"
 		},
 		{
-			"_id": "169",
+			"id": "169",
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+			"tags": [],
+			"latest_run": {
+                "id": "868",
+                "updated_at": "2016-12-20T16:33:42.150761",
+                "output": "SGVsbG8gV29ybGQhCg==",
+                "return_code": 0,
+                "created_at": "2016-12-20T16:18:42.150736",
+			    "status": "scheduled",
+                "user": "cloud_user"
+            },
 			"type": "bash"
 		},
 		{
-			"_id": "665",
+			"id": "665",
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
+			"tags": [],
+			"latest_run": {
+                "id": "868",
+                "updated_at": "2016-12-20T16:33:42.150761",
+                "output": "SGVsbG8gV29ybGQhCg==",
+                "return_code": 0,
+                "created_at": "2016-12-20T16:18:42.150736",
+			    "status": "scheduled",
+                "user": "cloud_user"
+            },
 			"type": "bash"
 		},
 		{
-			"_id": "862",
+			"id": "862",
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
 			"tags": ["Monitoring"],
+			"latest_run": {
+                "id": "868",
+                "updated_at": "2016-12-20T16:33:42.150761",
+                "output": "SGVsbG8gV29ybGQhCg==",
+                "return_code": 0,
+                "created_at": "2016-12-20T16:18:42.150736",
+			    "status": "scheduled",
+                "user": "cloud_user"
+            },
 			"type": "bash"
 		},
 		{
-			"_id": "807",
+			"id": "807",
 			"description": "Demo runbook description",
 			"name": "Demo runbook",
 			"runbook": "IyEvYmluL2Jhc2gKCmVjaG8gIkhlbGxvIFdvcmxkISIK",
 			"tags": ["Monitoring"],
+			"latest_run": {
+                "id": "868",
+                "updated_at": "2016-12-20T16:33:42.150761",
+                "output": "SGVsbG8gV29ybGQhCg==",
+                "return_code": 0,
+                "created_at": "2016-12-20T16:18:42.150736",
+			    "status": "scheduled",
+                "user": "cloud_user"
+            },
 			"type": "bash"
 		}
 	]
