@@ -1,9 +1,4 @@
 {
-    "flask": {
-        "PORT": 5000,
-        "HOST": "0.0.0.0",
-        "DEBUG": true
-    },
     "services": {
         "availability": "http://dummy.example.org/api/availability",
         "performance": "http://dummy.example.org/api/performance",

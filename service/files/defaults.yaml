@@ -1,10 +1,8 @@
 configs:
   ceagle:
     debug: true
-
     port:
       cont: 5000
-
     wsgi:
       workers: 4
 

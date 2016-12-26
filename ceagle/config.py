@@ -16,25 +16,11 @@
 DEFAULT_CONF_PATH = "/etc/ceagle/config.json"
 
 DEFAULT = {
-    "flask": {
-        "HOST": "0.0.0.0",
-        "PORT": 5000,
-        "DEBUG": False
-    },
     "use_fake_api_data": False,
     "services": {},
 }
 
 SCHEMA = {
-    "flask": {
-        "type": "object",
-        "properties": {
-            "HOST": {"type": "string"},
-            "PORT": {"type": "integer"},
-            "DEBUG": {"type": "boolean"},
-        },
-        "additionalProperties": False,
-    },
     "use_fake_api_data": {"type": "boolean"},
     "services": {
         "type": "object",

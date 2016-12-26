@@ -13,6 +13,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import argparse
+
 from oss_lib import config
 
 from ceagle import app
@@ -20,10 +22,20 @@ from ceagle import config as cfg
 
 
 def main():
-    config.process_args("CEAGLE",
-                        default_config_path=cfg.DEFAULT_CONF_PATH,
-                        defaults=cfg.DEFAULT,
-                        validation_schema=cfg.SCHEMA)
-    app_conf = config.CONF["flask"]
-    app.app.config.update(app_conf)
-    app.app.run(host=app_conf["HOST"], port=app_conf["PORT"])
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--host",
+                        default="0.0.0.0",
+                        help="A host to bind development server. "
+                             "(default 0.0.0.0)")
+    parser.add_argument("--port",
+                        type=int,
+                        default=5000,
+                        help="A port to bind development server. "
+                             "(default 5000)")
+    args = config.process_args("CEAGLE",
+                               parser=parser,
+                               default_config_path=cfg.DEFAULT_CONF_PATH,
+                               defaults=cfg.DEFAULT,
+                               validation_schema=cfg.SCHEMA)
+    app.app.config["DEBUG"] = args.debug
+    app.app.run(host=args.host, port=args.port)

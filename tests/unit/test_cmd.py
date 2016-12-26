@@ -20,14 +20,14 @@ from tests.unit import test
 
 
 class CmdTestCase(test.TestCase):
+    @mock.patch("ceagle.cmd.argparse.ArgumentParser")
     @mock.patch("oss_lib.config.process_args")
     @mock.patch("ceagle.cmd.app.app")
-    def test_main(self, mock_app, mock_process):
-        self.mock_config({
-            "flask": {
-                "HOST": "10.0.0.2",
-                "PORT": 80,
-            },
-        })
+    def test_main(self, mock_app, mock_process, mock_parser):
+        mock_process.return_value.configure_mock(
+            host="10.0.0.2",
+            port=80,
+            debug=False,
+        )
         cmd.main()
         mock_app.run.assert_called_once_with(host="10.0.0.2", port=80)
