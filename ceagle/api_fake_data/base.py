@@ -17,9 +17,9 @@ import functools
 import random
 import re
 
-from ceagle import config
+from oss_lib import config
 
-USE_FAKE_DATA = config.get_config().get("use_fake_api_data", True)
+CONF = config.CONF
 
 
 def route(reg):
@@ -82,12 +82,12 @@ def api_handler(fake):
     turns a function it decorates into a decorator, that accepts "real" api
     function (real_function_handler). The resulting decorator returns a
     (choice_maker) function, that calls real or fake function, depending on the
-    value of USE_FAKE_DATA global variable.
+    value of CONF["use_fake_api_data"] parameters.
     """
     def real_function_handler(real):
         @functools.wraps(real)
         def choice_maker(*args, **kwargs):
-            if USE_FAKE_DATA:
+            if CONF["use_fake_api_data"]:
                 return fake(*args, **kwargs)
             return real(*args, **kwargs)
         return choice_maker

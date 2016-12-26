@@ -15,22 +15,16 @@
 
 from tests.unit import test
 
-import ddt
-import mock
 
-
-fake_config = mock.Mock()
-fake_config.get_config.return_value = {
-    "use_fake_api_data": True,
-    "services": {
-        "security": "ok",
-    }
-}
-
-
-@ddt.ddt
-@mock.patch("ceagle.api.client.config", fake_config)
 class SecurityTestCase(test.TestCase):
+    def setUp(self):
+        super(SecurityTestCase, self).setUp()
+        self.mock_config({
+            "use_fake_api_data": True,
+            "services": {
+                "security": "ok",
+            },
+        })
 
     def test_get_issues_all_regions(self):
         resp = self.get("/api/v1/security/issues/week")

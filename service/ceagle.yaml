@@ -19,7 +19,7 @@ service:
                  --name ceagle
                  --workers {{ ceagle.wsgi.workers }}
                  --bind 0.0.0.0:{{ ceagle.port.cont }}
-                 ceagle.main:app
+                 ceagle.wsgi
         files:
           - ceagle.conf
 

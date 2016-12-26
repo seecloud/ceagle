@@ -13,18 +13,17 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from tests.unit import test
+from oss_lib import config
+
+from ceagle import app
+from ceagle import config as cfg
 
 
-class ApiTestCase(test.TestCase):
-
-    def test_api_response_code(self):
-        self.mock_config({"use_fake_api_data": True})
-        region = "north-2.piedpiper.net"
-        urlpath = "/api/v1/region/%s/infra" % region
-        code, resp = self.get(urlpath)
-        self.assertEqual(code, 200, urlpath)
-
-        urlpath = "/api/v1/region/unexpected_region/infra"
-        code, resp = self.get(urlpath)
-        self.assertEqual(404, code, urlpath)
+def main():
+    config.process_args("CEAGLE",
+                        default_config_path=cfg.DEFAULT_CONF_PATH,
+                        defaults=cfg.DEFAULT,
+                        validation_schema=cfg.SCHEMA)
+    app_conf = config.CONF["flask"]
+    app.app.config.update(app_conf)
+    app.app.run(host=app_conf["HOST"], port=app_conf["PORT"])

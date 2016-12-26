@@ -24,15 +24,8 @@ from ceagle.api.v1 import optimization
 from ceagle.api.v1 import regions
 from ceagle.api.v1 import security
 from ceagle.api.v1 import status
-from ceagle import config
 
-
-CONF = config.get_config()
-APP_CONF = CONF["flask"]
-
-
-app = flask.Flask(__name__, static_folder=None)
-app.config.update(APP_CONF)
+app = flask.Flask("ceagle", static_folder=None)
 
 
 @app.route("/api/")
@@ -57,11 +50,3 @@ for bp in [status, infrastructure, intelligence, optimization, security,
 
 
 app = routing.add_routing_map(app, html_uri=None, json_uri="/")
-
-
-def main():
-    app.run(host=APP_CONF["HOST"], port=APP_CONF["PORT"])
-
-
-if __name__ == "__main__":
-    main()

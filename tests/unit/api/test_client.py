@@ -68,24 +68,3 @@ class ClientTestCase(test.TestCase):
         mesg = "Service 'foo' is not available at 'http://foo_ep'"
         self.assertEqual(({"error": {"message": mesg}}, 502),
                          result)
-
-
-class ModuleTestCase(test.TestCase):
-
-    @mock.patch("ceagle.api.client.config")
-    def test_get_config(self, mock_config):
-        self.assertRaises(TypeError, client.get_client)
-        mock_config.get_config.return_value = {"use_fake_api_data": False,
-                                               "services": {"bar": {}}}
-        self.assertRaises(client.UnknownService, client.get_client, "foo")
-        mock_config.get_config.return_value = {"use_fake_api_data": False,
-                                               "services": {"foo": {}}}
-        self.assertRaises(client.UnknownService, client.get_client, "foo")
-
-        cfg = {"services": {"foo": "http://foo_ep"},
-               "use_fake_api_data": False}
-        mock_config.get_config.return_value = cfg
-        ct = client.get_client("foo")
-        self.assertIsInstance(ct, client.Client)
-        self.assertEqual("foo", ct.name)
-        self.assertEqual(cfg["services"]["foo"], ct.endpoint)

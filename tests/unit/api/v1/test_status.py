@@ -15,13 +15,14 @@
 
 import mock
 
-from ceagle.api_fake_data import base as fake_api_base
 from tests.unit import test
 
 
 class FakeApiTestCase(test.TestCase):
-
     def test_api_response_code(self):
+        self.mock_config({
+            "use_fake_api_data": True,
+        })
         region = "north-2.piedpiper.net"
         for urlpath in ("/api/v1/status",
                         "/api/v1/status/health",
@@ -50,18 +51,11 @@ class HealthApiTestCase(test.TestCase):
 
     def setUp(self):
         super(HealthApiTestCase, self).setUp()
-        self.health_config = {
-            "services": {
-                "health": "http://dummy.example.org/api/health"
-            }
+        self.config = {
+            "use_fake_api_data": False,
+            "services": {},
         }
-
-        self.old_USE_FAKE_DATA = fake_api_base.USE_FAKE_DATA
-        fake_api_base.USE_FAKE_DATA = False
-
-    def tearDown(self):
-        fake_api_base.USE_FAKE_DATA = self.old_USE_FAKE_DATA
-        super(HealthApiTestCase, self).tearDown()
+        self.mock_config(self.config)
 
     @mock.patch("ceagle.api.client.get_client")
     def test_status_health_api(self, mock_get_client):
@@ -79,9 +73,7 @@ class HealthApiTestCase(test.TestCase):
         mock_get_client.return_value.get.assert_called_with(
             "/api/v1/region/test_region/health/day")
 
-    @mock.patch("ceagle.config.get_config")
-    def test_health_api_no_endpoint(self, mock_get_config):
-        mock_get_config.return_value = {"use_fake_api_data": False}
+    def test_health_api_no_endpoint(self):
         code, resp = self.get("/api/v1/status/health/day")
         self.assertEqual(404, code)
         self.assertEqual({"error": "Unknown service 'health'"}, resp)
@@ -95,13 +87,11 @@ class AvailabilityApiTestCase(test.TestCase):
 
     def setUp(self):
         super(AvailabilityApiTestCase, self).setUp()
-        self.config = {"services": {"availability": "foo_endpoint"}}
-        self.saved_use_fake_api = fake_api_base.USE_FAKE_DATA
-        fake_api_base.USE_FAKE_DATA = False
-
-    def tearDown(self):
-        fake_api_base.USE_FAKE_DATA = self.saved_use_fake_api
-        super(AvailabilityApiTestCase, self).tearDown()
+        self.config = {
+            "use_fake_api_data": False,
+            "services": {"availability": "foo_endpoint"},
+        }
+        self.mock_config(self.config)
 
     @mock.patch("ceagle.api.client.get_client")
     def test_get_status_availability(self, mock_get_client):
@@ -124,20 +114,17 @@ class StatusApiTestCase(test.TestCase):
 
     def setUp(self):
         super(StatusApiTestCase, self).setUp()
-        self.config = {"services": {"availability": "foo_endpoint",
-                                    "health": "bar_endpoint"}}
-        self.saved_use_fake_api = fake_api_base.USE_FAKE_DATA
-        fake_api_base.USE_FAKE_DATA = False
+        self.config = {
+            "use_fake_api_data": False,
+            "services": {
+                "availability": "foo_endpoint",
+                "health": "bar_endpoint",
+            },
+        }
+        self.mock_config(self.config)
 
-    def tearDown(self):
-        fake_api_base.USE_FAKE_DATA = self.saved_use_fake_api
-        super(StatusApiTestCase, self).tearDown()
-
-    @mock.patch("ceagle.api.v1.status.config.get_config")
     @mock.patch("ceagle.api.v1.status.client.get_client")
-    def test_get_status(self, mock_client, mock_config):
-        mock_config.return_value = self.config
-
+    def test_get_status(self, mock_client):
         health_resp = {"health": {"foo": {"fci": 42}}}
         mock_health_client = mock.Mock()
         mock_health_client.get.return_value = (health_resp, 200)
@@ -165,11 +152,8 @@ class StatusApiTestCase(test.TestCase):
         }
         self.assertEqual(expected, resp)
 
-    @mock.patch("ceagle.api.v1.status.config.get_config")
     @mock.patch("ceagle.api.v1.status.client.get_client")
-    def test_get_region_status(self, mock_client, mock_config):
-        mock_config.return_value = self.config
-
+    def test_get_region_status(self, mock_client):
         health_resp = {"health": {"foo": {"fci": 42}}}
         mock_health_client = mock.Mock()
         mock_health_client.get.return_value = (health_resp, 200)

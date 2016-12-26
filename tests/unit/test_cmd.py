@@ -13,18 +13,21 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import mock
+
+from ceagle import cmd
 from tests.unit import test
 
 
-class ApiTestCase(test.TestCase):
-
-    def test_api_response_code(self):
-        self.mock_config({"use_fake_api_data": True})
-        region = "north-2.piedpiper.net"
-        urlpath = "/api/v1/region/%s/infra" % region
-        code, resp = self.get(urlpath)
-        self.assertEqual(code, 200, urlpath)
-
-        urlpath = "/api/v1/region/unexpected_region/infra"
-        code, resp = self.get(urlpath)
-        self.assertEqual(404, code, urlpath)
+class CmdTestCase(test.TestCase):
+    @mock.patch("oss_lib.config.process_args")
+    @mock.patch("ceagle.cmd.app.app")
+    def test_main(self, mock_app, mock_process):
+        self.mock_config({
+            "flask": {
+                "HOST": "10.0.0.2",
+                "PORT": 80,
+            },
+        })
+        cmd.main()
+        mock_app.run.assert_called_once_with(host="10.0.0.2", port=80)

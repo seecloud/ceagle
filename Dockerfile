@@ -19,4 +19,4 @@ WORKDIR /app/ceagle
 EXPOSE 5000
 
 ENTRYPOINT ["gunicorn"]
-CMD ["-w", "4", "-b", "0.0.0.0:5000", "main:app"]
+CMD ["-w", "4", "-b", "0.0.0.0:5000", "ceagle.wsgi"]
