@@ -31,7 +31,7 @@ def regions(detailed=False):
     srv = itertools.cycle([
         ["health", "performance", "cis"],
         ["health", "availability", "performance", "cis", "security"],
-        ["health", "security"]])
+        ["health"]])
 
     result = {} if detailed else []
 
