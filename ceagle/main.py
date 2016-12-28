@@ -13,6 +13,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import logging
+
 import flask
 from flask_helpers import routing
 
@@ -29,6 +31,8 @@ from ceagle import config
 
 CONF = config.get_config()
 APP_CONF = CONF["flask"]
+if APP_CONF.get("DEBUG", False):
+    logging.getLogger("werkzeug").setLevel(logging.DEBUG)
 
 
 app = flask.Flask(__name__, static_folder=None)
