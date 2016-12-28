@@ -8,7 +8,7 @@ pytest-cov>=2.2.1,<=2.3.0                              # MIT
 pytest-html                                            # Mozilla Public License 2.0 (MPL 2.0)
 pytest-xdist                                           # MIT
 
-coverage>=3.6                                          # Apache License, Version 2.0
+coverage>=3.6,!=4.3.0                                  # Apache License, Version 2.0
 ddt>=1.0.1
 mock>=2.0
 
