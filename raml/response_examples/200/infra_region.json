@@ -1,0 +1,35 @@
+{
+  "infra": [
+    {
+      "description": "Web UI that manages OpenStack resources",
+      "id": "horizon",
+      "title": "Horizon",
+      "urls": [
+        [
+          "http://none"
+        ]
+      ]
+    },
+    {
+      "description": "MaaS service that manages baremetal infrastructure",
+      "id": "baremetal",
+      "title": "Baremetal Provisioning",
+      "urls": [
+        [
+          "http://none"
+        ]
+      ]
+    },
+    {
+      "description": "Cloud Continues Integration and Deployment.",
+      "id": "jenkins",
+      "title": "Jenkins CI/CD",
+      "urls": [
+        [
+          "http://none"
+        ]
+      ]
+    }
+  ],
+  "region": "north-2.piedpiper.net"
+}

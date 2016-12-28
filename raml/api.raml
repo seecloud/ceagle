@@ -37,6 +37,19 @@ mediaType: application/json
             schema: !include schemas/200.json
             example: !include response_examples/200/regions_detailed.json
 
+  /infra:
+    get:
+      description: "Information about infrastructure services for all regions"
+      responses:
+        200:
+          body:
+            schema: !include schemas/200.json
+            example: !include response_examples/200/infra.json
+        404:
+          body:
+            schema: !include schemas/404.json
+            example: !include response_examples/404/region.json
+
   /security/issues/{period}:
     uriParameters:
       period:
@@ -144,7 +157,7 @@ mediaType: application/json
           200:
             body:
               schema: !include schemas/200.json
-              example: !include response_examples/200/infra.json
+              example: !include response_examples/200/infra_region.json
           404:
             body:
               schema: !include schemas/404.json

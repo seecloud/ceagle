@@ -13,34 +13,58 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import itertools
+
 import flask
 
 from ceagle.api_fake_data import base
 from ceagle.api_fake_data import fake_regions
 
 
-def generate_infra_services():
-    return [
-        {
-            "menu": "Jenkins",
-            "title": "Jenkins CI/CD system",
-            "description": "Some description about this service",
-            "url": "https://1.2.3.4:12345"
-        },
-        {
-            "menu": "Stacklight",
-            "title": "Logging, Metering and Alerting systems",
-            "description": "Some description about this service",
-            "url": "https://1.2.3.4:12345"
-        }]
+INFRAS = [
+    [{"id": "horizon",
+      "title": "Horizon",
+      "description": "Web UI that manages OpenStack resources",
+      "urls": [["http://none"]]},
+     {"id": "git",
+      "title": "Git Source Control",
+      "description": ("Gitlab with Git repositories with all "
+                      "projects source code"),
+      "urls": [["http://none"]]},
+     {"id": "packages",
+      "title": "JFrog Artifactory Packages",
+      "description": ("JFrog Artifactory service that contains "
+                      "all cloud packages & images"),
+      "urls": [["http://none"]]},
+     {"id": "stacklight",
+      "title": "Stacklight",
+      "description": "Cloud Logging, Metering and Alerting services",
+      "urls": [["http://none"]]}],
+    [{"id": "horizon",
+      "title": "Horizon",
+      "description": "Web UI that manages OpenStack resources",
+      "urls": [["http://none"]]},
+     {"id": "baremetal",
+      "title": "Baremetal Provisioning",
+      "description": "MaaS service that manages baremetal infrastructure",
+      "urls": [["http://none"]]},
+     {"id": "jenkins",
+      "title": "Jenkins CI/CD",
+      "description": "Cloud Continues Integration and Deployment.",
+      "urls": [["http://none"]]}]]
 
 
 @base.api_handler
 def get_region_infra(region):
-    data = fake_regions.regions(True).get(region)
-
-    if not data:
+    regions = fake_regions.regions()
+    if region not in regions:
         return flask.jsonify({"error": "Region '%s' not found" % region}), 404
+    infra_idx = regions.index(region) % len(INFRAS)
+    return flask.jsonify({"region": region, "infra": INFRAS[infra_idx]})
 
-    services = generate_infra_services()
-    return flask.jsonify({"region": region, "services": services})
+
+@base.api_handler
+def get_regions_infra():
+    infras = itertools.cycle(INFRAS)
+    infra = {region: next(infras) for region in fake_regions.regions()}
+    return flask.jsonify({"infra": infra})

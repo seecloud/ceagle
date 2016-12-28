@@ -34,22 +34,18 @@ SCHEMA = {
             "security": {"type": "string"},
             "infra": {
                 "type": "object",
-                "properties": {
-                    "pages": {
+                "patternProperties": {
+                    "\w+": {
                         "type": "array",
                         "uniqueItems": True,
                         "items": {
                             "type": "object",
                             "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                },
                                 "title": {
-                                    "type": "string",
-                                    "minLength": 1,
-                                },
-                                "full_title": {
-                                    "type": "string",
-                                    "minLength": 1,
-                                },
-                                "menu": {
                                     "type": "string",
                                     "minLength": 1,
                                 },
@@ -57,20 +53,23 @@ SCHEMA = {
                                     "type": "string",
                                     "minLength": 1,
                                 },
-                                "iframe": {
-                                    "type": "string",
-                                    "minLength": 1,
+                                "urls": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "minLength": 8
+                                        }
+                                    }
                                 },
                             },
-                            "required": ["title", "full_title", "menu",
-                                         "description", "iframe"],
+                            "required": ["id", "title", "description", "urls"],
                             "additionalProperties": False,
                         },
                     },
-                },
-                "required": ["pages"],
-                "additionalProperties": False,
-            },
+                }
+            }
         },
         "additionalProperties": False,
     },

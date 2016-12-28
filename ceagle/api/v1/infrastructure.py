@@ -14,18 +14,32 @@
 #    under the License.
 
 import flask
+from oss_lib import config
 
 from ceagle.api_fake_data import fake_infra
 
+CONF = config.CONF
 
 bp = flask.Blueprint("infra", __name__)
 
 
-@bp.route("/<region>/infra")
+@bp.route("/region/<region>/infra")
 @fake_infra.get_region_infra
 def get_region_infra(region):
-    return flask.jsonify("fixme!")
+    infra = CONF["services"].get("infra", {}).get(region)
+    if not infra:
+        flask.abort(404)
+    return flask.jsonify({"region": region, "infra": infra})
+
+
+@bp.route("/infra")
+@fake_infra.get_regions_infra
+def get_regions_infra():
+    infra = CONF["services"].get("infra", {})
+    if not infra:
+        flask.abort(404)
+    return flask.jsonify({"infra": infra})
 
 
 def get_blueprints():
-    return [["/region", bp]]
+    return [["", bp]]

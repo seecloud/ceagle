@@ -7,39 +7,45 @@ services:
   optimization: http://dummy.example.org/api/optimization
   security: http://dummy.example.org/api/security
   infra:
-    pages:
-      - title: Horizon
-        full_title: Horizon
-        menu: horzion
+    foo_region:
+      - id: horizon
+        title: Horizon
         description: Web UI that manages OpenStack resources
-        iframe: http://nan
+        urls:
+          -
+            - http://nan
 
-      - title: Baremetal
-        full_title: Baremetal Provisioning
-        menu: baremetal
+      - id: baremetal
+        title: Baremetal Provisioning
         description: MaaS service that manages baremetal infrastructure
-        iframe: http://nan
+        urls:
+          -
+            - http://nan
 
-      - title: Jenkins CI/CD
-        full_title: Jenkins CI/CD
-        menu: jenkins
+      - id: jenkins
+        title: Jenkins CI/CD
         description: Cloud Continues Integration and Deployment.
-        iframe: http://nan
+        urls:
+          -
+            - http://nan
 
-      - title: Source Control
-        full_title: Git Source Control
-        menu: git
+      - id: git
+        title: Git Source Control
         description: Gitlab with Git repositories with all projects source code
-        iframe: http://nan
+        urls:
+          -
+            - http://nan
 
-      - title: Packages
-        full_title: JFrog Artifactory Packages
-        menu: packages
+      - id: packages
+        title: JFrog Artifactory Packages
         description: JFrog Artifactory service that contains all cloud packages & images
-        iframe: http://nan
+        urls:
+          -
+            - http://nan
 
-      - title: Stacklight
-        full_title: Stacklight
-        menu: stacklight
+      - id: stacklight
+        title: Stacklight
         description: Cloud Logging Metering and Alerting services
-        iframe: http://nan
+        urls:
+          -
+            - http://nan
