@@ -1,28 +1,21 @@
 [
     {
-        "issueType": "securityGroup",
-        "regionId": "Region1",
+        "object_id": "423",
+        "type": "securityGroup",
+        "region": "Region1",
         "description": "Security group too open",
-        "discoveredAt": "2016-02-28T16:41:41.090Z",
-        "confirmedAt": "2016-03-28T16:41:41.090Z",
-        "subject": {
-            "id": "d8b0be7c-2ad7-4083-8d5a-a7a9a56fdd14",
-            "type": "securityGroup",
-            "tenantId": "demo",
-            "userId": "demo"
-        }
+        "discovered_at": "2016-02-28T16:41:41.090Z",
+        "confirmed_at": "2016-03-28T16:41:41.090Z",
+        "tenant_id": "demo",
+        "user_id": "demo"
     }, {
-        "issueType": "securityGroup",
-        "regionId": "Region1",
+        "object_id": "424",
+        "type": "securityGroup",
+        "region": "Region1",
         "description": "Security group too open",
-        "discoveredAt": "2016-02-28T16:21:41.090Z",
-        "confirmedAt": "2016-03-28T16:31:41.090Z",
-        "resolvedAt": "2016-04-28T16:31:41.090Z",
-        "subject": {
-            "id": "d8b0be7c-2ad7-4083-8d5a-a7a9a56fdd15",
-            "type": "securityGroup",
-            "tenantId": "demo",
-            "userId": "demo"
-        }
+        "discovered_at": "2016-02-28T16:21:41.090Z",
+        "confirmed_at": "2016-03-28T16:31:41.090Z",
+        "resolved_at": "2016-04-28T16:31:41.090Z",
+        "data": {}
     }
 ]
