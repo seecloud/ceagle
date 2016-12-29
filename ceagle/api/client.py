@@ -13,11 +13,13 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from oss_lib import config
 import requests
 
 from ceagle.api import base
 from ceagle.api_fake_data import security
-from ceagle import config
+
+CONF = config.CONF
 
 FAKE_CLIENT_MAP = {
     "security": security.Client,
@@ -58,13 +60,13 @@ def get_client(service_name):
     :param service_name: str name of microservice
     :returns: Client
     """
-    if config.get_config().get("use_fake_api_data", True):
+    if CONF["use_fake_api_data"]:
         client_class = FAKE_CLIENT_MAP.get(service_name)
         if client_class is None:
             raise NotImplementedError(
                 "Fake client for '%s' is not implemented" % service_name)
         return client_class(name=service_name, endpoint="_fake_")
-    endpoint = config.get_config().get("services", {}).get(service_name)
+    endpoint = CONF["services"].get(service_name)
     if endpoint:
         return Client(name=service_name, endpoint=endpoint)
     raise UnknownService("Unknown service '%s'" % service_name)

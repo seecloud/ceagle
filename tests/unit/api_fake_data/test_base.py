@@ -21,14 +21,16 @@ from tests.unit import test
 
 class ModuleTestCase(test.TestCase):
 
-    @mock.patch("ceagle.api_fake_data.base.config")
-    def test_api_handler(self, mock_config):
-        mock_config.get_config.return_value = {}
+    def test_api_handler_fake(self):
+        self.mock_config({"use_fake_api_data": True})
         fake = lambda: "fake"
         real = lambda: "real"
         self.assertEqual("fake", base.api_handler(fake)(real)())
-        self.assertEqual(base.USE_FAKE_DATA, True)
-        base.USE_FAKE_DATA = False
+
+    def test_api_handler_real(self):
+        self.mock_config({"use_fake_api_data": False})
+        fake = lambda: "fake"
+        real = lambda: "real"
         self.assertEqual("real", base.api_handler(fake)(real)())
 
     @mock.patch("ceagle.api_fake_data.base.random")

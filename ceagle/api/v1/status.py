@@ -14,11 +14,12 @@
 #    under the License.
 
 import flask
+from oss_lib import config
 
 from ceagle.api import client
 from ceagle.api_fake_data import fake_status
-from ceagle import config
 
+CONF = config.CONF
 
 bp_status = flask.Blueprint("status", __name__)
 bp_region_status = flask.Blueprint("region", __name__)
@@ -32,7 +33,7 @@ def get_status_helper(period, region=None):
     }
 
     for service_name in ["health", "availability"]:
-        if service_name not in config.get_config()["services"]:
+        if service_name not in CONF["services"]:
             continue
 
         service_client = client.get_client(service_name)

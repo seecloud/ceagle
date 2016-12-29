@@ -14,10 +14,12 @@
 #    under the License.
 
 import flask
+from oss_lib import config
 
 from ceagle.api import client
 from ceagle.api_fake_data import fake_regions
-from ceagle import config
+
+CONF = config.CONF
 
 bp = flask.Blueprint("regions", __name__)
 
@@ -28,7 +30,7 @@ bp = flask.Blueprint("regions", __name__)
 def get_regions(detailed):
     regions = {}
 
-    for service_name in config.get_config()["services"].keys():
+    for service_name in CONF["services"].keys():
         if service_name == "infra":
             continue   # TODO(boris-42): This should not be checked here.
         service_client = client.get_client(service_name)

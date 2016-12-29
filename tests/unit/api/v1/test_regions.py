@@ -17,13 +17,15 @@ import collections
 
 import mock
 
-from ceagle.api_fake_data import base as fake_api_base
 from tests.unit import test
 
 
 class ApiTestCase(test.TestCase):
 
     def test_api_response_code(self):
+        self.mock_config({
+            "use_fake_api_data": False,
+        })
         code, resp = self.get("/api/v1/regions")
         self.assertEqual(code, 200)
         code, resp = self.get("/api/v1/regions/detailed")
@@ -34,36 +36,39 @@ class RegionsApiTestCase(test.TestCase):
 
     def setUp(self):
         super(RegionsApiTestCase, self).setUp()
-        self.config = {
-            "services": collections.OrderedDict([
-                ("availability", "foo_endpoint"),
-                ("health", "foo_endpoint"),
-                ("infra", {})
-            ])
-        }
-        self.saved_use_fake_api = fake_api_base.USE_FAKE_DATA
-        fake_api_base.USE_FAKE_DATA = False
+        self.mock_config({
+            "use_fake_api_data": False,
+        })
+        self.mock_services(collections.OrderedDict([
+            ("availability", "foo_endpoint"),
+            ("health", "foo_endpoint"),
+            ("infra", {}),
+        ]))
 
-    def tearDown(self):
-        fake_api_base.USE_FAKE_DATA = self.saved_use_fake_api
-        super(RegionsApiTestCase, self).tearDown()
+    def mock_services(self, services):
+        patch = mock.patch.dict("oss_lib.config._CONF", {
+            "services": services,
+        })
+        patch.start()
+        self.addCleanup(patch.stop)
 
-    @mock.patch("ceagle.config.get_config")
     @mock.patch("ceagle.api.client.get_client")
-    def test_get_regions(self, mock_get_client, mock_config):
-        mock_config.return_value = self.config
+    def test_get_regions(self, mock_get_client):
         mock_get_client.return_value.get.side_effect = [
             (["a1", "b1", "c1"], 200),
             (["b1", "d1", "e1"], 200),
-            (["a2", "b2", "c2"], 200),
-            (["b2", "d2", "e2"], 200)
         ]
         code, resp = self.get("/api/v1/regions")
         self.assertEqual(200, code)
         resp["regions"].sort()
         self.assertEqual({"regions": ["a1", "b1", "c1", "d1", "e1"]}, resp)
 
-        mock_get_client.get_client.reset_mock()
+    @mock.patch("ceagle.api.client.get_client")
+    def test_get_resions_detailed(self, mock_get_client):
+        mock_get_client.return_value.get.side_effect = [
+            (["a2", "b2", "c2"], 200),
+            (["b2", "d2", "e2"], 200),
+        ]
         code, resp = self.get("/api/v1/regions/detailed")
         self.assertEqual(200, code)
         self.assertEqual({

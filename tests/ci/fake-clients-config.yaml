@@ -1,0 +1,3 @@
+use_fake_api_data: true
+services:
+  security: http://example.org/api/security

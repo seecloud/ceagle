@@ -13,34 +13,65 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import json
-import logging
-import os
+DEFAULT_CONF_PATH = "/etc/ceagle/config.yaml"
 
-
-CONF = None
-DEFAULT_CONF = {
-    "flask": {
-        "HOST": "0.0.0.0",
-        "PORT": 5000,
-        "DEBUG": False
-    }
+DEFAULT = {
+    "use_fake_api_data": False,
+    "services": {},
 }
 
-
-def get_config():
-    """Return cached configuration.
-
-    :returns: application config
-    :rtype: dict
-    """
-    global CONF
-    if not CONF:
-        path = os.environ.get("CEAGLE_CONF", "/etc/ceagle/config.json")
-        try:
-            CONF = json.load(open(path))
-            logging.info("Config is '%s'" % path)
-        except IOError as e:
-            logging.warning("Config at '%s': %s" % (path, e))
-            CONF = DEFAULT_CONF
-    return CONF
+SCHEMA = {
+    "use_fake_api_data": {"type": "boolean"},
+    "services": {
+        "type": "object",
+        "properties": {
+            "availability": {"type": "string"},
+            "capacity": {"type": "string"},
+            "cis": {"type": "string"},
+            "health": {"type": "string"},
+            "optimization": {"type": "string"},
+            "performance": {"type": "string"},
+            "security": {"type": "string"},
+            "infra": {
+                "type": "object",
+                "properties": {
+                    "pages": {
+                        "type": "array",
+                        "uniqueItems": True,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                },
+                                "full_title": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                },
+                                "menu": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                },
+                                "iframe": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                },
+                            },
+                            "required": ["title", "full_title", "menu",
+                                         "description", "iframe"],
+                            "additionalProperties": False,
+                        },
+                    },
+                },
+                "required": ["pages"],
+                "additionalProperties": False,
+            },
+        },
+        "additionalProperties": False,
+    },
+}

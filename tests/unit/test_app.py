@@ -13,9 +13,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import mock
-
-from ceagle import main
 from tests.unit import test
 
 
@@ -38,9 +35,3 @@ class AppTestCase(test.TestCase):
                 "methods": ["GET", "HEAD", "OPTIONS"],
                 "uri": "/api/v1/capacity/"}
         self.assertIn(part, resp)
-
-    @mock.patch("ceagle.main.app")
-    def test_main(self, mock_app):
-        self.assertFalse(mock_app.run.called)
-        main.main()
-        mock_app.run.assert_called_once_with(host="0.0.0.0", port=5000)
