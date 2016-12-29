@@ -16,7 +16,7 @@
 DEFAULT_CONF_PATH = "/etc/ceagle/config.yaml"
 
 DEFAULT = {
-    "use_fake_api_data": False,
+    "use_fake_api_data": True,
     "services": {},
 }
 
