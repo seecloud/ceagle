@@ -17,10 +17,12 @@ import requests
 
 from ceagle.api import base
 from ceagle.api_fake_data import security
+from ceagle.api_fake_data import availability
 from ceagle import config
 
 FAKE_CLIENT_MAP = {
     "security": security.Client,
+    "availability": availability.Client,
 }
 
 

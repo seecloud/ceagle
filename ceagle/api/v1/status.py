@@ -78,7 +78,6 @@ def get_status_performance(period):
 
 
 @bp_status.route("/availability/<period>")
-@fake_status.get_status_availability
 def get_status_availability(period):
     ct = client.get_client("availability")
     api_endpoint = "/api/v1/availability/{period}".format(period=period)

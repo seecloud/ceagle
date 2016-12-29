@@ -46,3 +46,14 @@ class FakeClientTestCase(test.TestCase):
         c = base.FakeClient("name", "endpoint")
         res = c.get("/none")
         self.assertEqual(404, res[1])
+
+
+class GenerateDataTestCase(test.TestCase):
+
+    def test_gen(self):
+        def gen(ts):
+            return "sample data for %s" % ts
+        gen = base.generate_data("day", gen)
+        for i in gen:
+            print i
+        self.assertEqual(1, 2)

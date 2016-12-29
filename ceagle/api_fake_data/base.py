@@ -13,13 +13,40 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import datetime
 import functools
 import random
 import re
 
 from ceagle import config
 
+import flask
+
 USE_FAKE_DATA = config.get_config().get("use_fake_api_data", True)
+
+PERIOD_DAYS = {
+    "day": 1,
+    "week": 7,
+    "month": 30,
+    "year": 365,
+}
+
+REGIONS = [
+    "region1",
+    "region2",
+    "far-away.example.net",
+]
+
+
+def generate_data(period, method, chunks=40):
+    days = PERIOD_DAYS.get(period)
+    if days is None:
+        flask.abort(404)
+    now = datetime.datetime.utcnow()
+    step = datetime.timedelta(days=days) / chunks
+    for i in range(chunks):
+        ts = now - step * (chunks - i)
+        yield [ts.isoformat()[:16], method(ts)]
 
 
 def route(reg):
