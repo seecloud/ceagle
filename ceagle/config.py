@@ -31,6 +31,9 @@ SCHEMA = {
             "health": {"type": "string"},
             "optimization": {"type": "string"},
             "performance": {"type": "string"},
+            "runbook-read": {"type": "string"},
+            "runbook-write": {"type": "string"},
+            "runbook-run": {"type": "string"},
             "security": {"type": "string"},
             "infra": {
                 "type": "object",
