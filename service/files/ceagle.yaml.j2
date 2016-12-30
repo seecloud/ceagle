@@ -1,3 +1,5 @@
+use_fake_api_data: False
 services:
-  availability: http://{{ address(availability-api port=availability.port) }}
-  health: http://{{ address(health-api port=health.port) }}
+  availability: http://{{ address('availability-api', availability.port) }}
+  health: http://{{ address('health-api', health.port) }}
+  security: http://{{ address('security-api', security.port) }}
