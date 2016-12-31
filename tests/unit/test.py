@@ -46,6 +46,19 @@ class TestCase(testtools.TestCase):
             validation_schema=cfg.SCHEMA,
         )
 
+    def post(self, *args, **kwargs):
+        rv = self.app.post(*args, **kwargs)
+        return rv.status_code, json.loads(rv.data.decode())
+
+    def put(self, *args, **kwargs):
+        rv = self.app.put(*args, **kwargs)
+        return rv.status_code, json.loads(rv.data.decode())
+
+    def delete(self, *args, **kwargs):
+        rv = self.app.delete(*args, **kwargs)
+        # there should be no content on delete method
+        return rv.status_code, rv.data.decode()
+
     def get(self, *args, **kwargs):
         rv = self.app.get(*args, **kwargs)
         return rv.status_code, json.loads(rv.data.decode())

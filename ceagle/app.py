@@ -22,6 +22,7 @@ from ceagle.api.v1 import infrastructure
 from ceagle.api.v1 import intelligence
 from ceagle.api.v1 import optimization
 from ceagle.api.v1 import regions
+from ceagle.api.v1 import runbooks
 from ceagle.api.v1 import security
 from ceagle.api.v1 import status
 
@@ -44,7 +45,7 @@ def handle_unknown_service(ex):
 
 
 for bp in [status, infrastructure, intelligence, optimization, security,
-           regions, capacity]:
+           regions, runbooks, capacity]:
     for url_prefix, blueprint in bp.get_blueprints():
         app.register_blueprint(blueprint, url_prefix="/api/v1%s" % url_prefix)
 
