@@ -1,0 +1,25 @@
+runbook:
+  description: Base64-encoded body of the runbook
+  required: true
+  type: string
+description:
+  description: Human-readable runbooks description
+  required: true
+  type: string
+name:
+  description: Name of the runbook
+  required: true
+  type: string
+type:
+  description: Type (i.e. bash, python, etc) of the runbook
+  required: true
+  type: string
+# There seems to be no way to set array parameters for forms
+# tags:
+#  description: List of tags
+#  required: false
+#  type: array
+# parameters:
+#  description: List of runbook parameters
+#  required: false
+#  type: array
