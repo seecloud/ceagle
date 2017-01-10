@@ -30,41 +30,74 @@ class ClientTestCase(test.TestCase):
         self.assertEqual("foo_ep", ct.endpoint)
         self.assertEqual("<Client 'foo'>", repr(ct))
 
-    @mock.patch("ceagle.api.client.requests.get")
-    def test_get(self, mock_requests_get):
-        mock_requests_get.return_value.status_code = "foo_status"
-        mock_requests_get.return_value.json.return_value = {"foo": 42}
+    @mock.patch("ceagle.api.client.requests.request")
+    def test_get(self, mock_requests):
+        mock_requests.return_value.status_code = "foo_status"
+        mock_requests.return_value.json.return_value = {"foo": 42}
         ct = client.Client("foo", "http://foo_ep")
         result = ct.get()
-        mock_requests_get.assert_called_once_with("http://foo_ep/")
+        mock_requests.assert_called_once_with("GET", "http://foo_ep/")
         self.assertEqual(({"foo": 42}, "foo_status"), result)
 
-        mock_requests_get.reset_mock()
-
-    @mock.patch("ceagle.api.client.requests.get")
-    def test_get_with_path(self, mock_requests_get):
-        mock_requests_get.return_value.json.return_value = {"foo": 42}
-        mock_requests_get.return_value.status_code = 200
+    @mock.patch("ceagle.api.client.requests.request")
+    def test_get_with_path(self, mock_requests):
+        mock_requests.return_value.json.return_value = {"foo": 42}
+        mock_requests.return_value.status_code = 200
         ct = client.Client("foo", "http://foo_ep")
         result = ct.get("/bar")
-        mock_requests_get.assert_called_once_with("http://foo_ep/bar")
+        mock_requests.assert_called_once_with("GET", "http://foo_ep/bar")
         self.assertEqual(({"foo": 42}, 200), result)
 
-    @mock.patch("ceagle.api.client.requests.get")
-    def test_get_wrong_response_fmt(self, mock_requests_get):
-        mock_requests_get.return_value.json.side_effect = ValueError
+    @mock.patch("ceagle.api.client.requests.request")
+    def test_get_no_content(self, mock_requests):
+        mock_requests.return_value.json.return_value = {"foo": 42}
+        mock_requests.return_value.status_code = 204
+        ct = client.Client("foo", "http://foo_ep")
+        result = ct.get("/bar")
+        mock_requests.assert_called_once_with("GET", "http://foo_ep/bar")
+        self.assertEqual(("", 204), result)
+
+    @mock.patch("ceagle.api.client.requests.request")
+    def test_get_wrong_response_fmt(self, mock_requests):
+        mock_requests.return_value.json.side_effect = ValueError
         ct = client.Client("foo", "http://foo_ep")
         result = ct.get("/bar")
         self.assertEqual(
             ({"error": {"message": "Response can not be decoded"}}, 500),
             result)
 
-    @mock.patch("ceagle.api.client.requests.get")
-    def test_get_not_available(self, mock_requests_get):
-        mock_requests_get.side_effect = (
+    @mock.patch("ceagle.api.client.requests.request")
+    def test_get_not_available(self, mock_requests):
+        mock_requests.side_effect = (
             client.requests.exceptions.ConnectionError)
         ct = client.Client("foo", "http://foo_ep")
         result = ct.get("/bar")
         mesg = "Service 'foo' is not available at 'http://foo_ep'"
         self.assertEqual(({"error": {"message": mesg}}, 502),
                          result)
+
+    @mock.patch("ceagle.api.client.requests.request")
+    def test_methods(self, mock_requests):
+        mock_requests.return_value.json.return_value = {"foo": 42}
+        mock_requests.return_value.status_code = 200
+        ct = client.Client("foo", "http://foo_ep")
+
+        result = ct.get("/bar", body={}, data={})
+        mock_requests.assert_called_with("GET", "http://foo_ep/bar",
+                                         body={}, data={})
+        self.assertEqual(({"foo": 42}, 200), result)
+
+        result = ct.put("/bar", body={}, data={})
+        mock_requests.assert_called_with("PUT", "http://foo_ep/bar",
+                                         body={}, data={})
+        self.assertEqual(({"foo": 42}, 200), result)
+
+        result = ct.post("/bar", body={}, data={})
+        mock_requests.assert_called_with("POST", "http://foo_ep/bar",
+                                         body={}, data={})
+        self.assertEqual(({"foo": 42}, 200), result)
+
+        result = ct.delete("/bar", body={}, data={})
+        mock_requests.assert_called_with("DELETE", "http://foo_ep/bar",
+                                         body={}, data={})
+        self.assertEqual(({"foo": 42}, 200), result)
