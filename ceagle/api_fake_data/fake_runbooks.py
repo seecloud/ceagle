@@ -44,7 +44,7 @@ def get_single_runbook(with_latest_run=True):
         "latest_run": None,
         "tags": random.choice(tag_choices),
         "parameters": random.choice(parameter_choices),
-        "regionId": random.choice(region_choices),
+        "region": random.choice(region_choices),
     }
 
     if with_latest_run:
@@ -68,7 +68,7 @@ def get_single_run(with_parent=True):
         "output": "SGVsbG8gV29ybGQhCg==",
         "return_code": 0,
         "parent": None,
-        "regionId": random.choice(region_choices),
+        "region": random.choice(region_choices),
     }
     if with_parent:
         run["parent"] = get_single_runbook(False)
