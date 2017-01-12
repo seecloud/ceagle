@@ -89,3 +89,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# abao tests run gunicorn in tox, this file is used to track it's pid and kill after run
+.gunicorn.pid
